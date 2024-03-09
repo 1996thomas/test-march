@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  abi:
-    specifier: ^0.0.0
-    version: 0.0.0
   frog:
     specifier: latest
     version: 0.5.5(@types/node@14.18.33)(hono@4.0.10)(typescript@5.3.3)
@@ -948,10 +945,6 @@ packages:
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
     dev: true
-
-  /abi@0.0.0:
-    resolution: {integrity: sha512-W4IOHp436Ih2EOWlyECNzNmHdLlO2lMvZ9IgnNf7c6Qs3amKJbi1U9GGEX33kyWBWrYsUVyq2/ch1DvgydZRkw==}
-    dev: false
 
   /abitype@0.9.8(typescript@5.3.3):
     resolution: {integrity: sha512-puLifILdm+8sjyss4S+fsUN09obiT1g2YW6CtcQF+QDzxR0euzgEB29MZujC6zMk2a6SVmtttq1fc6+YFA7WYQ==}
