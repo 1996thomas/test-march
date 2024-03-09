@@ -1,5 +1,6 @@
 import { Button, Frog } from "frog";
 import teamsData from "./equipes_ncaa.json";
+import { handle } from "frog/vercel";
 
 type MatchResult = {
   m: number; // m pour "match"
@@ -274,3 +275,5 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
 }
+export const GET = handle(app)
+export const POST = handle(app)
