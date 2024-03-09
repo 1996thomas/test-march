@@ -120,6 +120,7 @@ app.frame("/", (c) => {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
 
       return c.res({
+        imageOptions: { width: 600, height: 600 },
         image: (
           <div
             style={{
@@ -275,5 +276,5 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
 }
-export const GET = handle(app)
-export const POST = handle(app)
+export const GET = handle(app);
+export const POST = handle(app);
