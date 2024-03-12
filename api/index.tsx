@@ -307,11 +307,13 @@ export const app = new Frog<{ State: State }>({
 
 //@ts-ignore
 app.frame("/", (c) => {
-  const { buttonValue, deriveState, verified } = c;
+  const { buttonValue, deriveState, verified, frameData } = c;
+  //@ts-ignore
+  const { buttonIndex, fid, castId } = frameData;
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      console.log(verified)
+      console.log(buttonIndex, fid, castId);
       if (buttonValue === "reset") {
         return initializeTournamentState();
       }
