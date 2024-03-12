@@ -311,7 +311,7 @@ app.frame("/", (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      console.log("Coucou je suis vérifié")
+      console.log(verified)
       if (buttonValue === "reset") {
         return initializeTournamentState();
       }
