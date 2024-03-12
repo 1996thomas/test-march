@@ -1,5 +1,5 @@
 import { Button, Frog } from "frog";
-import { pinata } from "frog/hubs";
+import { neynar } from "frog/hubs";
 import { handle } from "frog/vercel";
 const teamsData = {
   "1": {
@@ -301,19 +301,16 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
-  hub: pinata(),
   initialState: initializeTournamentState(),
 });
 
 //@ts-ignore
 app.frame("/", (c) => {
-  const { buttonValue, deriveState, verified, frameData } = c;
-  //@ts-ignore
-  const { buttonIndex, fid, castId } = frameData;
+  const { buttonValue, deriveState, frameData, verified } = c;
+  console.log(frameData?.buttonIndex, frameData?.fid, c.previousState.ucs);
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      console.log(buttonIndex, fid, castId);
       if (buttonValue === "reset") {
         return initializeTournamentState();
       }
