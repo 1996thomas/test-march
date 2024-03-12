@@ -1,6 +1,7 @@
 import { Button, Frog } from "frog";
 import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
+const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
     logo: "https://www.proballers.com/api/getTeamLogo?id=1255&width=150",
@@ -287,7 +288,7 @@ type State = {
 };
 
 function initializeTournamentState(): State {
-  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -307,8 +308,7 @@ export const app = new Frog<{ State: State }>({
 
 //@ts-ignore
 app.frame("/", (c) => {
-  const { buttonValue, deriveState, frameData, verified } = c;
-  console.log(frameData?.buttonIndex, frameData?.fid, c.previousState.ucs);
+  const { buttonValue, deriveState, verified } = c;
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
@@ -391,7 +391,10 @@ app.frame("/", (c) => {
           </div>
         </div>
       ),
-      intents: [<Button.Reset>Reset Tournament</Button.Reset>],
+      intents: [
+        <Button.Reset>Reset Tournament</Button.Reset>,
+        <Button action="/finish">Complete bet</Button>,
+      ],
     });
   } else {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
@@ -580,6 +583,37 @@ app.frame("/summary", (c) => {
         Go back
       </Button>,
     ],
+  });
+});
+
+app.frame("/finish", (c) => {
+  console.log(c.previousState.ucs);
+  const ucs = c.previousState.ucs;
+  const parsedJson = JSON.stringify(ucs);
+  console.log(parsedJson);
+
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: bearerToken,
+      "Content-Type": "application/json",
+    },
+    body: `{"pinataContent":{"ucs":${parsedJson}}}`,
+  };
+
+  if (ucs) {
+    //@ts-ignore
+    fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+  }
+  return c.res({
+    image: (
+      <div style={{ display: "flex", color: "white", fontSize: "3rem" }}>
+        Saulo the best
+      </div>
+    ),
   });
 });
 
