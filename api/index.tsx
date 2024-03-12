@@ -515,7 +515,7 @@ app.frame("/", (c) => {
                       opacity: ".1",
                     }}
                   />
-                  <img width="200" height="200" src={teams[id].logo} alt="" />
+                  <img width="210" height="210" src={teams[id].logo} alt="" />
                   <p
                     style={{
                       color: white,
