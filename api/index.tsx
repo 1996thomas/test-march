@@ -1,5 +1,5 @@
 import { Button, Frog } from "frog";
-import { neynar } from "frog/hubs";
+import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
 const teamsData = {
   "1": {
@@ -301,7 +301,7 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
-  hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
+  hub: pinata(),
   initialState: initializeTournamentState(),
 });
 
