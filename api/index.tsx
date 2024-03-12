@@ -297,8 +297,8 @@ function initializeTournamentState(): State {
 }
 
 export const app = new Frog<{ State: State }>({
-  basePath: "/",
-  assetsPath: "/api",
+  assetsPath: '/',
+  basePath: '/api',
   initialState: initializeTournamentState(),
 });
 
