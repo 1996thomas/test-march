@@ -1,6 +1,5 @@
 import { Button, Frog } from "frog";
 import { handle } from "frog/vercel";
-
 const teamsData = {
   "1": {
     logo: "https://www.proballers.com/api/getTeamLogo?id=1255&width=150",
@@ -260,6 +259,11 @@ const teamsData = {
   },
 };
 
+const primaryColor = "#AE3EFF";
+const bgColor = "#101013";
+const secondaryColor = "#101013";
+const white = "#F4EFE9";
+
 type MatchResult = {
   m: number; // m pour "match"
   w: number; // w pour "winner"
@@ -285,7 +289,7 @@ type State = {
 // Fonction pour initialiser ou réinitialiser l'état du tournoi
 function initializeTournamentState(): State {
   // Générer les participants comme un tableau d'ID de 1 à 32
-  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -297,8 +301,8 @@ function initializeTournamentState(): State {
 }
 
 export const app = new Frog<{ State: State }>({
-  assetsPath: '/',
-  basePath: '/api',
+  assetsPath: "/",
+  basePath: "/api",
   initialState: initializeTournamentState(),
 });
 
@@ -351,7 +355,7 @@ app.frame("/", (c) => {
       image: (
         <div
           style={{
-            backgroundColor: "#909090",
+            backgroundColor: bgColor,
             flexDirection: "column",
             display: "flex",
             width: "100%",
@@ -363,7 +367,7 @@ app.frame("/", (c) => {
           <div
             style={{
               display: "flex",
-              color: "white",
+              color: white,
               fontSize: "3rem",
               flexDirection: "column",
               alignItems: "center",
@@ -376,10 +380,7 @@ app.frame("/", (c) => {
               style={{
                 borderRadius: "100px",
                 padding: "0",
-                background: "rgba(255, 255, 255, 0.2)",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
+                border: "3px solid #f4efe9",
               }}
               src={teams[state.ps[0]].logo}
               alt=""
@@ -399,7 +400,6 @@ app.frame("/", (c) => {
         image: (
           <div
             style={{
-              backgroundColor: "#909090",
               flexDirection: "column",
               display: "flex",
               fontSize: 60,
@@ -409,46 +409,83 @@ app.frame("/", (c) => {
               height: "100%",
             }}
           >
+            <img
+              width="15%"
+              height="15%"
+              src="/logo.png"
+              style={{
+                position: "absolute",
+                top: "17%",
+                left: "12%",
+                opacity: ".2",
+                transform: "translate(-50%,-40%)",
+              }}
+            />
             <div style={{ display: "flex", flex: "0" }}>
               <span
                 style={{
                   display: "flex",
                   width: `${Math.round((state.mn / 64) * 100)}%`,
-                  height: "30px",
-                  background: "#90EE90,",
-                  color: "white",
+                  height: "20px",
+                  background: primaryColor,
                   textAlign: "center",
                   position: "relative",
                 }}
               ></span>
+              <p
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                  paddingBottom: "25px",
+                  fontSize: "2rem",
+                  width: "120px",
+                  height: "120px",
+                  color: "white",
+                  position: "absolute",
+                  top: "-90px",
+                  right: "-13px",
+                  transform: "translateY(0%)",
+                  backgroundColor: bgColor,
+                  border: `5px solid ${primaryColor}`,
+                  borderRadius: "50%",
+                }}
+              >
+                {Math.round((state.mn / 64) * 100)}%
+              </p>
             </div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
-                borderRadius: "1000px",
+                borderRadius: "1rem",
                 fontSize: "1.8rem",
                 textAlign: "center",
                 margin: "0 auto",
                 width: "40%",
-                background: "rgba(255, 255, 255, 0.2)",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
-                opacity: ".9",
+                border: `6px solid ${primaryColor}`,
+                backgroundColor: bgColor,
               }}
             >
-              <div style={{ display: "flex", height: "15%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  height: "15%",
+                  color: white,
+                  fontSize: "2rem",
+                  letterSpacing: "-1px",
+                }}
+              >
                 {roundTest(state.mn, "tournamentStatus")}
               </div>
             </div>
             <div
               style={{
                 display: "flex",
-                color: "white",
+                color: white,
                 fontSize: "2rem",
                 justifyContent: "space-between",
-                height: "70%",
+                height: "65%",
               }}
               className="match__wrapper"
             >
@@ -457,7 +494,6 @@ app.frame("/", (c) => {
                   style={{
                     flex: "2",
                     display: "flex",
-                    color: "lightGray",
                     alignItems: "center",
                     justifyContent: "center",
                     flexDirection: "column",
@@ -476,14 +512,13 @@ app.frame("/", (c) => {
                       transform: "translate(-50%,-60%)",
                       padding: "40px",
                       filter: "blur(100px)",
-                      opacity: ".4",
+                      opacity: ".1",
                     }}
                   />
                   <img width="200" height="200" src={teams[id].logo} alt="" />
-
                   <p
                     style={{
-                      color: "#090909",
+                      color: white,
                       fontSize: "2.9rem",
                     }}
                   >
@@ -522,7 +557,7 @@ app.frame("/summary", (c) => {
                 padding: "10px",
                 width: "86px",
                 borderRadius: "50%",
-                backgroundColor: "white",
+                backgroundColor: white,
               }}
               src={teams[uc.w].logo}
               alt=""
@@ -582,5 +617,6 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
 }
+
 export const GET = handle(app);
 export const POST = handle(app);
