@@ -1,7 +1,6 @@
 import { Button, Frog, parseEther } from "frog";
 import teamsData from "./allTeams2023.json";
 import { handle } from "frog/vercel";
-import { abi } from "./abi.js";
 
 type MatchResult = {
   m: number; // m pour "match"
