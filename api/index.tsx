@@ -1,4 +1,5 @@
 import { Button, Frog } from "frog";
+import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
 const teamsData = {
   "1": {
@@ -261,7 +262,6 @@ const teamsData = {
 
 const primaryColor = "#AE3EFF";
 const bgColor = "#101013";
-const secondaryColor = "#101013";
 const white = "#F4EFE9";
 
 type MatchResult = {
@@ -278,17 +278,15 @@ interface Teams {
 
 const teams: Teams = teamsData;
 type State = {
-  ps: number[]; // ps pour "participants"
-  cmi: number; // cmi pour "currentMatchIndex"
-  nr: number[]; // nr pour "nextRound"
-  mn: number; // mn pour "matchNumber"
-  ucs?: MatchResult[]; // ucs pour "userChoices"
-  showSummary: boolean; // Initialisation du flag de sommaire à false
+  ps: number[]; // ps for "participants"
+  cmi: number; // cmi for "currentMatchIndex"
+  nr: number[]; // nr for "nextRound"
+  mn: number; // mn for "matchNumber"
+  ucs?: MatchResult[]; // ucs for "userChoices"
+  showSummary: boolean;
 };
 
-// Fonction pour initialiser ou réinitialiser l'état du tournoi
 function initializeTournamentState(): State {
-  // Générer les participants comme un tableau d'ID de 1 à 32
   let ps = Array.from({ length: 64 }, (_, index) => index + 1);
   return {
     ps,
@@ -296,249 +294,256 @@ function initializeTournamentState(): State {
     nr: [],
     mn: 1,
     ucs: [],
-    showSummary: false, // Initialisation du flag de sommaire à false
+    showSummary: false,
   };
 }
 
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
+  hub: pinata(),
   initialState: initializeTournamentState(),
 });
 
 //@ts-ignore
 app.frame("/", (c) => {
-  const { buttonValue, deriveState } = c;
-  //@ts-ignore
-  const state = deriveState((previousState) => {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+  const { buttonValue, deriveState, verified } = c;
+  console.log(verified);
+  if (verified) {
+    //@ts-ignore
+    const state = deriveState((previousState) => {
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        previousState.nr.push(winnerIndex);
-        if (!previousState.ucs) previousState.ucs = []; // Vérifier si ucs est défini
-        previousState.ucs.push({
-          m: previousState.mn, // Mettre à jour le numéro du match
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
         }
       }
-    }
-  });
-  if (state.ps.length === 1) {
-    return c.res({
-      image: (
-        <div
-          style={{
-            backgroundColor: bgColor,
-            flexDirection: "column",
-            display: "flex",
-            width: "100%",
-            textAlign: "center",
-            justifyContent: "center",
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              color: white,
-              fontSize: "3rem",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-around",
-            }}
-          >
-            <img
-              width={400}
-              height={400}
-              style={{
-                borderRadius: "100px",
-                padding: "0",
-                border: "3px solid #f4efe9",
-              }}
-              src={teams[state.ps[0]].logo}
-              alt=""
-            />
-            <p>{teams[state.ps[0]].name}</p>
-          </div>
-        </div>
-      ),
-      intents: [<Button.Reset>Reset Tournament</Button.Reset>],
     });
-  } else {
-    // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
-    if (state.ps.length > state.cmi + 1) {
-      const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
-
+    if (state.ps.length === 1) {
       return c.res({
         image: (
           <div
             style={{
+              backgroundColor: bgColor,
               flexDirection: "column",
               display: "flex",
-              fontSize: 60,
               width: "100%",
               textAlign: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
               height: "100%",
             }}
           >
-            <img
-              width="15%"
-              height="15%"
-              src="/logo.png"
-              style={{
-                position: "absolute",
-                top: "17%",
-                left: "12%",
-                opacity: ".2",
-                transform: "translate(-50%,-40%)",
-              }}
-            />
-            <div style={{ display: "flex", flex: "0" }}>
-              <span
-                style={{
-                  display: "flex",
-                  width: `${Math.round((state.mn / 64) * 100)}%`,
-                  height: "20px",
-                  background: primaryColor,
-                  textAlign: "center",
-                  position: "relative",
-                }}
-              ></span>
-              <p
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "flex-end",
-                  paddingBottom: "25px",
-                  fontSize: "2rem",
-                  width: "120px",
-                  height: "120px",
-                  color: "white",
-                  position: "absolute",
-                  top: "-90px",
-                  right: "-13px",
-                  transform: "translateY(0%)",
-                  backgroundColor: bgColor,
-                  border: `5px solid ${primaryColor}`,
-                  borderRadius: "50%",
-                }}
-              >
-                {Math.round((state.mn / 64) * 100)}%
-              </p>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                borderRadius: "1rem",
-                fontSize: "1.8rem",
-                textAlign: "center",
-                margin: "0 auto",
-                width: "40%",
-                border: `6px solid ${primaryColor}`,
-                backgroundColor: bgColor,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  height: "15%",
-                  color: white,
-                  fontSize: "2rem",
-                  letterSpacing: "-1px",
-                }}
-              >
-                {roundTest(state.mn, "tournamentStatus")}
-              </div>
-            </div>
             <div
               style={{
                 display: "flex",
                 color: white,
-                fontSize: "2rem",
-                justifyContent: "space-between",
-                height: "65%",
+                fontSize: "3rem",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-around",
               }}
-              className="match__wrapper"
             >
-              {...matchParticipants.map((id) => (
-                <div
-                  style={{
-                    flex: "2",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    position: "relative",
-                  }}
-                >
-                  <span
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: "50%",
-                      position: "absolute",
-                      height: "50vw",
-                      width: "50vw",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%,-60%)",
-                      padding: "40px",
-                      filter: "blur(100px)",
-                      opacity: ".1",
-                    }}
-                  />
-                  <img width="210" height="210" src={teams[id].logo} alt="" />
-                  <p
-                    style={{
-                      color: white,
-                      fontSize: "2.9rem",
-                    }}
-                  >
-                    {teams[id].name}
-                  </p>
-                </div>
-              ))}
+              <img
+                width={400}
+                height={400}
+                style={{
+                  borderRadius: "100px",
+                  padding: "0",
+                  border: "3px solid #f4efe9",
+                }}
+                src={teams[state.ps[0]].logo}
+                alt=""
+              />
+              <p>{teams[state.ps[0]].name}</p>
             </div>
           </div>
         ),
-        intents: [
-          ...matchParticipants.map((id) => (
-            <Button value={`select-${id}`}>{teams[id].name}</Button>
-          )),
-          <Button action="/summary" value="summary">
-            Summary
-          </Button>,
-          <Button.Reset>⚠️ Reset ⚠️</Button.Reset>,
-        ],
+        intents: [<Button.Reset>Reset Tournament</Button.Reset>],
       });
+    } else {
+      // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
+      if (state.ps.length > state.cmi + 1) {
+        const matchParticipants = [
+          state.ps[state.cmi],
+          state.ps[state.cmi + 1],
+        ];
+
+        return c.res({
+          image: (
+            <div
+              style={{
+                flexDirection: "column",
+                display: "flex",
+                fontSize: 60,
+                width: "100%",
+                textAlign: "center",
+                justifyContent: "space-between",
+                height: "100%",
+              }}
+            >
+              <img
+                width="15%"
+                height="15%"
+                src="/logo.png"
+                style={{
+                  position: "absolute",
+                  top: "17%",
+                  left: "12%",
+                  opacity: ".2",
+                  transform: "translate(-50%,-40%)",
+                }}
+              />
+              <div style={{ display: "flex", flex: "0" }}>
+                <span
+                  style={{
+                    display: "flex",
+                    width: `${Math.round((state.mn / 64) * 100)}%`,
+                    height: "20px",
+                    background: primaryColor,
+                    textAlign: "center",
+                    position: "relative",
+                  }}
+                ></span>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-end",
+                    paddingBottom: "25px",
+                    fontSize: "2rem",
+                    width: "120px",
+                    height: "120px",
+                    color: "white",
+                    position: "absolute",
+                    top: "-90px",
+                    right: "-13px",
+                    transform: "translateY(0%)",
+                    backgroundColor: bgColor,
+                    border: `5px solid ${primaryColor}`,
+                    borderRadius: "50%",
+                  }}
+                >
+                  {Math.round((state.mn / 64) * 100)}%
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "1rem",
+                  fontSize: "1.8rem",
+                  textAlign: "center",
+                  margin: "0 auto",
+                  width: "40%",
+                  border: `6px solid ${primaryColor}`,
+                  backgroundColor: bgColor,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    height: "15%",
+                    color: white,
+                    fontSize: "2rem",
+                    letterSpacing: "-1px",
+                  }}
+                >
+                  {roundTest(state.mn, "tournamentStatus")}
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  color: white,
+                  fontSize: "2rem",
+                  justifyContent: "space-between",
+                  height: "65%",
+                }}
+                className="match__wrapper"
+              >
+                {...matchParticipants.map((id) => (
+                  <div
+                    style={{
+                      flex: "2",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      position: "relative",
+                    }}
+                  >
+                    <span
+                      style={{
+                        backgroundColor: "white",
+                        borderRadius: "50%",
+                        position: "absolute",
+                        height: "50vw",
+                        width: "50vw",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%,-60%)",
+                        padding: "40px",
+                        filter: "blur(100px)",
+                        opacity: ".1",
+                      }}
+                    />
+                    <img width="210" height="210" src={teams[id].logo} alt="" />
+                    <p
+                      style={{
+                        color: white,
+                        fontSize: "2.9rem",
+                      }}
+                    >
+                      {teams[id].name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ),
+          intents: [
+            ...matchParticipants.map((id) => (
+              <Button value={`select-${id}`}>{teams[id].name}</Button>
+            )),
+            <Button action="/summary" value="summary">
+              Summary
+            </Button>,
+            <Button.Reset>⚠️ Reset ⚠️</Button.Reset>,
+          ],
+        });
+      }
     }
   }
 });
