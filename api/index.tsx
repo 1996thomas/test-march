@@ -1,6 +1,7 @@
-import { Button, Frog } from "frog";
-import teamsData from "./equipes_ncaa.json";
+import { Button, Frog, parseEther } from "frog";
+import teamsData from "./allTeams2023.json";
 import { handle } from "frog/vercel";
+import { abi } from "./abi.js";
 
 type MatchResult = {
   m: number; // m pour "match"
@@ -27,7 +28,7 @@ type State = {
 // Fonction pour initialiser ou réinitialiser l'état du tournoi
 function initializeTournamentState(): State {
   // Générer les participants comme un tableau d'ID de 1 à 32
-  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -39,6 +40,8 @@ function initializeTournamentState(): State {
 }
 
 export const app = new Frog<{ State: State }>({
+  basePath: "/",
+  assetsPath: "/api",
   initialState: initializeTournamentState(),
 });
 
@@ -87,32 +90,50 @@ app.frame("/", (c) => {
     }
   });
   if (state.ps.length === 1) {
-    const ucsSummary =
-      state.ucs && state.ucs.length > 0
-        ? state.ucs
-            .map((choice) => `Match ${choice.m}: Winner ID ${choice.w}`)
-            .join("///")
-        : "No choices made.";
-
     return c.res({
       image: (
         <div
           style={{
-            color: "white",
-            display: "flex",
+            backgroundColor: "#909090",
             flexDirection: "column",
-            fontSize: 10,
+            display: "flex",
+            width: "100%",
+            textAlign: "center",
+            justifyContent: "center",
+            height: "100%",
           }}
         >
-          <div style={{ display: "flex", color: "white", fontSize: "1rem" }}>
-            Winner ID: {state.ps[0]}
-          </div>
-          <div style={{ display: "flex", color: "black", fontSize: "1rem" }}>
-            Choices: {ucsSummary}
+          <div
+            style={{
+              display: "flex",
+              color: "white",
+              fontSize: "3rem",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <img
+              width={400}
+              height={400}
+              style={{
+                borderRadius: "100px",
+                padding: "0",
+                background: "rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+              }}
+              src={teams[state.ps[0]].logo}
+              alt=""
+            />
+            <p>{teams[state.ps[0]].name}</p>
           </div>
         </div>
       ),
-      intents: [<Button.Reset>Reset Tournament</Button.Reset>],
+      intents: [
+        <Button.Reset>Reset Tournament</Button.Reset>,
+      ],
     });
   } else {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
@@ -120,67 +141,95 @@ app.frame("/", (c) => {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
 
       return c.res({
-        imageOptions: { width: 600, height: 600 },
         image: (
           <div
             style={{
-              backgroundColor: "#202020	",
-              color: "white",
+              backgroundColor: "#909090",
               flexDirection: "column",
               display: "flex",
               fontSize: 60,
               width: "100%",
               textAlign: "center",
+              justifyContent: "space-between",
               height: "100%",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                width: `${Math.round((state.mn / 64) * 100)}%`,
-                height: "20px",
-                background: "green",
-                borderRadius: "3px",
-                color: "white",
-                textAlign: "center",
-              }}
-            ></div>
+            <div style={{ display: "flex", flex: "0" }}>
+              <span
+                style={{
+                  display: "flex",
+                  width: `${Math.round((state.mn / 64) * 100)}%`,
+                  height: "30px",
+                  background: "#90EE90,",
+                  color: "white",
+                  textAlign: "center",
+                  position: "relative",
+                }}
+              ></span>
+            </div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
-                color: "black",
-                backgroundColor: "lightgray",
                 borderRadius: "1000px",
-                fontSize: "2rem",
+                fontSize: "1.8rem",
                 textAlign: "center",
                 margin: "0 auto",
-                width: "30%",
+                width: "40%",
+                background: "rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                opacity: ".9",
               }}
             >
-              {roundTest(state.mn, "tqt")}
+              <div style={{ display: "flex", height: "15%" }}>
+                {roundTest(state.mn, "tournamentStatus")}
+              </div>
             </div>
             <div
-              style={{ display: "flex", color: "white", fontSize: "2rem" }}
+              style={{
+                display: "flex",
+                color: "white",
+                fontSize: "2rem",
+                justifyContent: "space-between",
+                height: "70%",
+              }}
               className="match__wrapper"
             >
               {...matchParticipants.map((id) => (
                 <div
                   style={{
+                    flex: "2",
                     display: "flex",
-                    color: "white",
-                    flex: "1",
+                    color: "lightGray",
                     alignItems: "center",
                     justifyContent: "center",
                     flexDirection: "column",
+                    position: "relative",
                   }}
                 >
-                  <img width="200" src={teams[id].logo} alt="" />
+                  <span
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: "50%",
+                      position: "absolute",
+                      height: "50vw",
+                      width: "50vw",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%,-60%)",
+                      padding: "40px",
+                      filter: "blur(100px)",
+                      opacity: ".4",
+                    }}
+                  />
+                  <img width="200" height="200" src={teams[id].logo} alt="" />
+
                   <p
                     style={{
-                      color: "yellow",
-                      fontSize: "2.4rem",
+                      color: "#090909",
+                      fontSize: "2.9rem",
                     }}
                   >
                     {teams[id].name}
@@ -194,10 +243,10 @@ app.frame("/", (c) => {
           ...matchParticipants.map((id) => (
             <Button value={`select-${id}`}>{teams[id].name}</Button>
           )),
-          <Button.Reset>Reset Tournament</Button.Reset>,
           <Button action="/summary" value="summary">
             Summary
           </Button>,
+          <Button.Reset>⚠️ Reset ⚠️</Button.Reset>,
         ],
       });
     }
@@ -209,19 +258,21 @@ app.frame("/summary", (c) => {
   return c.res({
     image: (
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {state.ucs?.map((uc) => (
-          <img
-            width="96"
-            style={{
-              border: roundTest(uc.m),
-              padding: "10px",
-              width: "86px",
-              borderRadius: "50%",
-              backgroundColor: "white",
-            }}
-            src={teams[uc.w].logo}
-            alt=""
-          />
+        {state.ucs?.map((uc, i) => (
+          <div style={{ display: "flex" }}>
+            <img
+              width="96"
+              style={{
+                border: roundTest(uc.m),
+                padding: "10px",
+                width: "86px",
+                borderRadius: "50%",
+                backgroundColor: "white",
+              }}
+              src={teams[uc.w].logo}
+              alt=""
+            />
+          </div>
         ))}
       </div>
     ),
@@ -235,43 +286,43 @@ app.frame("/summary", (c) => {
 
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
   if (matchNum <= 8) {
-    return i ? <p>South - 1/8</p> : "8px solid green";
+    return i ? <p>South - First round</p> : "8px solid green";
   } else if (matchNum <= 16) {
-    return i ? <p>East - 1/8</p> : "8px solid red";
+    return i ? <p>East - First round</p> : "8px solid red";
   } else if (matchNum <= 24) {
-    return i ? <p>Midwest - 1/8</p> : "8px solid orange";
+    return i ? <p>Midwest - First round</p> : "8px solid orange";
   } else if (matchNum <= 32) {
-    return i ? <p>West - 1/8</p> : "8px solid blue";
+    return i ? <p>West - First round</p> : "8px solid blue";
   } else if (matchNum <= 36) {
-    return i ? <p>South - 1/4</p> : "8px solid green";
+    return i ? <p>South - Second round</p> : "8px solid green";
   } else if (matchNum <= 40) {
-    return i ? <p>East - 1/4</p> : "8px solid red";
+    return i ? <p>East - Second round</p> : "8px solid red";
   } else if (matchNum <= 44) {
-    return i ? <p>Midwest - 1/4</p> : "8px solid orange";
+    return i ? <p>Midwest - Second round</p> : "8px solid orange";
   } else if (matchNum <= 48) {
-    return i ? <p>West - 1/4</p> : "8px solid blue";
+    return i ? <p>West - Second round</p> : "8px solid blue";
   } else if (matchNum <= 50) {
-    return i ? <p>South - 1/2</p> : "8px solid green";
+    return i ? <p>South - Sweet 16</p> : "8px solid green";
   } else if (matchNum <= 52) {
-    return i ? <p>East - 1/2</p> : "8px solid red";
+    return i ? <p>East - Sweet 16</p> : "8px solid red";
   } else if (matchNum <= 54) {
-    return i ? <p>Midwest - 1/2</p> : "8px solid orange";
+    return i ? <p>Midwest - Sweet 16</p> : "8px solid orange";
   } else if (matchNum <= 56) {
-    return i ? <p>West - 1/2</p> : "8px solid blue";
+    return i ? <p>West - Sweet 16</p> : "8px solid blue";
   } else if (matchNum === 57) {
-    return i ? <p>South - Finale</p> : "10px solid green";
+    return i ? <p>South - Elite Eight</p> : "10px solid green";
   } else if (matchNum === 58) {
-    return i ? <p>East - Finale</p> : "10px solid red";
+    return i ? <p>East - Elite Eight</p> : "10px solid red";
   } else if (matchNum === 59) {
-    return i ? <p>Midwest - Finale</p> : "10px solid orange";
+    return i ? <p>Midwest - Elite Eight</p> : "10px solid orange";
   } else if (matchNum === 60) {
-    return i ? <p>West - Finale</p> : "10px solid blue";
+    return i ? <p>West - Elite Eight</p> : "10px solid blue";
   } else if (matchNum === 61) {
-    return <p>SOUTH VS EAST</p>;
+    return <p>Final Four</p>;
   } else if (matchNum === 62) {
-    return <p>MIDWEST VS WEST</p>;
+    return <p>Final Four</p>;
   } else if (matchNum === 63) {
-    return <p>FINALE</p>;
+    return <p>NCAA championship</p>;
   } else {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
