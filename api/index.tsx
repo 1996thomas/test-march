@@ -301,6 +301,7 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
+  hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
   initialState: initializeTournamentState(),
 });
 
