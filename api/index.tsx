@@ -547,7 +547,14 @@ app.frame("/summary", (c) => {
   const state = c.previousState;
   return c.res({
     image: (
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          padding: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
         {state.ucs?.map((uc) => (
           <div style={{ display: "flex" }}>
             <img
@@ -608,11 +615,11 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
   } else if (matchNum === 60) {
     return i ? <p>West - Elite Eight</p> : "10px solid blue";
   } else if (matchNum === 61) {
-    return <p>Final Four</p>;
+    return i ? <p>Final Four</p> : "10px solid yellow";
   } else if (matchNum === 62) {
-    return <p>Final Four</p>;
+    return i ? <p>Final Four</p> : "10px solid yellow";
   } else if (matchNum === 63) {
-    return <p>NCAA championship</p>;
+    return i ? <p>NCAA championship</p> : "10px solid yellow";
   } else {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
