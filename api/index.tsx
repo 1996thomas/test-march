@@ -2,9 +2,7 @@ import { Button, Frog } from "frog";
 import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
 import dotenv from "dotenv";
-dotenv.config();
 
-const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
     logo: "https://www.proballers.com/api/getTeamLogo?id=1255&width=150",
@@ -315,43 +313,43 @@ app.frame("/", (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
-        previousState.nr.push(winnerIndex);
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        if (!previousState.ucs) previousState.ucs = [];
-        previousState.ucs.push({
-          m: previousState.mn,
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
         }
-      }
       }
     }
   });
@@ -590,6 +588,8 @@ app.frame("/summary", (c) => {
 });
 
 app.frame("/finish", (c) => {
+  const bearerToken = process.env.BEARER_TOKEN;
+  dotenv.config();
   console.log(c.previousState.ucs);
   const ucs = c.previousState.ucs;
   const parsedJson = JSON.stringify(ucs);
