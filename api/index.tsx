@@ -2,7 +2,10 @@ import { Button, Frog } from "frog";
 import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
 import dotenv from "dotenv";
+import axios from "axios";
 
+dotenv.config();
+const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
     logo: "https://www.proballers.com/api/getTeamLogo?id=1255&width=150",
@@ -587,25 +590,36 @@ app.frame("/summary", (c) => {
   });
 });
 
-app.frame("/finish", (c) => {
-  dotenv.config();
-  const bearerToken = process.env.BEARER_TOKEN;
-  console.log(c.previousState.ucs);
+
+// Votre code précédent reste le même jusqu'à cette partie
+
+app.frame("/finish", async (c) => {
   const ucs = c.previousState.ucs;
   const parsedJson = JSON.stringify(ucs);
 
-  if (ucs) {
-    //@ts-ignore
-    const options = {
-      method: "GET",
-      headers: { Authorization: `Bearer ${bearerToken}` },
-    };
+  const url = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
 
-    fetch("https://api.pinata.cloud/data/pinList", options)
-      .then((response) => console.log(response))
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+  if (ucs) {
+    try {
+      const response = await axios.post(
+        url,
+        {
+          pinataContent: { ucs: parsedJson },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   return c.res({
     image: (
       <div style={{ display: "flex", color: "white", fontSize: "3rem" }}>
