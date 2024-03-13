@@ -308,7 +308,7 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
-  // hub: pinata(),
+  hub: pinata(),
   initialState: initializeTournamentState(),
 });
 
@@ -361,30 +361,6 @@ app.frame("/", async (c) => {
     }
   });
   if (state.ps.length === 1) {
-    try {
-      const response = await axios.get(
-        `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
-        {
-          headers: { Authorization: `Bearer ${bearerToken}` },
-        }
-      );
-      const userData = response.data;
-
-      let setFollowingTrue = false;
-      if (userData !== undefined) {
-        userData.data.users.forEach((user: { fid: number }) => {
-          if (user.fid === 1287) {
-            setFollowingTrue = true;
-          }
-        });
-      }
-      if (setFollowingTrue) {
-        state.isFollowing = true;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(state.isFollowing);
     return c.res({
       image: (
         <div
@@ -425,19 +401,14 @@ app.frame("/", async (c) => {
       ),
       intents: [
         <Button.Reset>Reset Tournament</Button.Reset>,
-        state.isFollowing ? (
-          <Button action="/finish">Submit</Button>
-        ) : (
-          <Button.Redirect location="https://warpcast.com/bourbier">
-            Follow us to submit
-          </Button.Redirect>
-        ),
+        <Button action="/finish">Submit</Button>,
       ],
     });
   } else {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
     if (state.ps.length > state.cmi + 1) {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
+
       return c.res({
         image: (
           <div
@@ -633,6 +604,7 @@ app.frame("/finish", async (c) => {
   const ucs = c.previousState.ucs;
   const fid = c.frameData?.fid;
   let userData = [];
+  let setFollowingTrue = false;
 
   if (fid) {
     try {
@@ -656,7 +628,24 @@ app.frame("/finish", async (c) => {
       });
     }
   }
-  if (ucs && userData) {
+  try {
+    const response = await axios.get(
+      `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
+      {
+        headers: { Authorization: `Bearer ${bearerToken}` },
+      }
+    );
+    const userData = response.data;
+
+    userData.data.users.forEach((user: { fid: number }) => {
+      if (user.fid === 1287) {
+        setFollowingTrue = true;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  if (ucs && userData && setFollowingTrue) {
     const userInformation = {
       username: userData.data.username,
       display_name: userData.data.display_name,
@@ -691,39 +680,60 @@ app.frame("/finish", async (c) => {
         image: (
           <div style={{ display: "flex" }}>
             <p style={{ color: "white", fontSize: "2rem" }}>
-              Error while posting data on Pinata, try later
+              Problem while posting your submission, please retry
             </p>
           </div>
         ),
-        intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
+        intents: [
+          <Button action="/finish">🔁 Retry 🔁</Button>,
+          <Button.Redirect location="https://warpcast.com/july">
+            Follow us
+          </Button.Redirect>,
+        ],
       });
     }
-  }
 
-  return c.res({
-    image: (
-      <div
-        style={{
-          display: "flex",
-          color: "white",
-          fontSize: "3rem",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
-        <p>
-          Your choices have been submitted, see you on April 4 for the results
-        </p>
-        <p>don't forget to mint your official participation NFT !</p>
-      </div>
-    ),
-    intents: [
-      <Button>Mint</Button>,
-      <Button action="/summary" value="final_summary">
-        Submitted choices
-      </Button>,
-    ],
-  });
+    return c.res({
+      image: (
+        <div
+          style={{
+            display: "flex",
+            color: "white",
+            fontSize: "3rem",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <p>
+            Your choices have been submitted, see you on April 4 for the results
+          </p>
+          <p>don't forget to mint your official participation NFT !</p>
+        </div>
+      ),
+      intents: [
+        <Button>Mint</Button>,
+        <Button action="/summary" value="final_summary">
+          Submitted choices
+        </Button>,
+      ],
+    });
+  } else {
+    return c.res({
+      image: (
+        <div style={{ display: "flex" }}>
+          <p style={{ color: "white", fontSize: "2rem" }}>
+            You need to follow us brother
+          </p>
+        </div>
+      ),
+      intents: [
+        <Button action="/finish">🔁 Retry 🔁</Button>,
+        <Button.Redirect location="https://warpcast.com/july">
+          Follow us
+        </Button.Redirect>,
+      ],
+    });
+  }
 });
 
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
