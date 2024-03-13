@@ -361,6 +361,29 @@ app.frame("/", async (c) => {
     }
   });
   if (state.ps.length === 1) {
+    try {
+      const response = await axios.get(
+        `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
+        {
+          headers: { Authorization: `Bearer ${bearerToken}` },
+        }
+      );
+      const userData = response.data;
+
+      let setFollowingTrue = false;
+      if (userData !== undefined) {
+        userData.data.users.forEach((user: { fid: number }) => {
+          if (user.fid === 1287) {
+            setFollowingTrue = true;
+          }
+        });
+      }
+      if (setFollowingTrue) {
+        state.isFollowing = true;
+      }
+    } catch (error) {
+      console.log(error);
+    }
     console.log(state.isFollowing);
     return c.res({
       image: (
@@ -415,30 +438,6 @@ app.frame("/", async (c) => {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
     if (state.ps.length > state.cmi + 1) {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
-      try {
-        const response = await axios.get(
-          `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
-          {
-            headers: { Authorization: `Bearer ${bearerToken}` },
-          }
-        );
-        const userData = response.data;
-
-        let setFollowingTrue = false;
-        if (userData !== undefined) {
-          userData.data.users.forEach((user: { fid: number }) => {
-            if (user.fid === 1287) {
-              setFollowingTrue = true;
-            }
-          });
-        }
-        if (setFollowingTrue) {
-          state.isFollowing = true;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-
       return c.res({
         image: (
           <div
