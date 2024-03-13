@@ -401,6 +401,7 @@ app.frame("/", async (c) => {
       ),
       intents: [
         <Button.Reset>Reset Tournament</Button.Reset>,
+
         <Button action="/finish">Submit</Button>,
       ],
     });
@@ -637,6 +638,7 @@ app.frame("/finish", async (c) => {
     );
     const userData = response.data;
 
+    let setFollowingTrue = false;
     userData.data.users.forEach((user: { fid: number }) => {
       if (user.fid === 1287) {
         setFollowingTrue = true;
@@ -645,7 +647,7 @@ app.frame("/finish", async (c) => {
   } catch (error) {
     console.log(error);
   }
-  if (ucs && userData && setFollowingTrue) {
+  if (ucs && userData) {
     const userInformation = {
       username: userData.data.username,
       display_name: userData.data.display_name,
@@ -655,85 +657,82 @@ app.frame("/finish", async (c) => {
       recovery_address: userData.data.custody_address,
     };
 
-    try {
-      const postResponse = await axios.post(
-        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-        {
-          pinataContent: {
-            userInformation,
-            ucs,
+    if (setFollowingTrue) {
+      try {
+        const postResponse = await axios.post(
+          "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+          {
+            pinataContent: {
+              userInformation,
+              ucs,
+            },
+            pinataMetadata: {
+              name: `${userInformation.username}'s choices`,
+            },
           },
-          pinataMetadata: {
-            name: `${userInformation.username}'s choices`,
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Réponse POST :", postResponse.data);
-    } catch (error) {
+          {
+            headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Réponse POST :", postResponse.data);
+      } catch (error) {
+        return c.res({
+          image: (
+            <div style={{ display: "flex" }}>
+              <p style={{ color: "white", fontSize: "2rem" }}>
+                Error while posting data on Pinata, try later
+              </p>
+            </div>
+          ),
+          intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
+        });
+      }
+    } else {
       return c.res({
         image: (
           <div style={{ display: "flex" }}>
             <p style={{ color: "white", fontSize: "2rem" }}>
-              Problem while posting your submission, please retry
+              You need to follow us brother
             </p>
           </div>
         ),
         intents: [
           <Button action="/finish">🔁 Retry 🔁</Button>,
-          <Button.Redirect location="https://warpcast.com/july">
+          <Button.Redirect location="https://warpcast.com/ace">
             Follow us
           </Button.Redirect>,
         ],
       });
     }
-
-    return c.res({
-      image: (
-        <div
-          style={{
-            display: "flex",
-            color: "white",
-            fontSize: "3rem",
-            flexDirection: "column",
-            gap: "1rem",
-          }}
-        >
-          <p>
-            Your choices have been submitted, see you on April 4 for the results
-          </p>
-          <p>don't forget to mint your official participation NFT !</p>
-        </div>
-      ),
-      intents: [
-        <Button>Mint</Button>,
-        <Button action="/summary" value="final_summary">
-          Submitted choices
-        </Button>,
-      ],
-    });
-  } else {
-    return c.res({
-      image: (
-        <div style={{ display: "flex" }}>
-          <p style={{ color: "white", fontSize: "2rem" }}>
-            You need to follow us brother
-          </p>
-        </div>
-      ),
-      intents: [
-        <Button action="/finish">🔁 Retry 🔁</Button>,
-        <Button.Redirect location="https://warpcast.com/july">
-          Follow us
-        </Button.Redirect>,
-      ],
-    });
   }
+
+  return c.res({
+    image: (
+      <div
+        style={{
+          display: "flex",
+          color: "white",
+          fontSize: "3rem",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        <p>
+          Your choices have been submitted, see you on April 4 for the results
+        </p>
+        <p>don't forget to mint your official participation NFT !</p>
+      </div>
+    ),
+    intents: [
+      <Button>Mint</Button>,
+      <Button action="/summary" value="final_summary">
+        Submitted choices
+      </Button>,
+    ],
+  });
 });
 
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
