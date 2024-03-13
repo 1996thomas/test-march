@@ -631,6 +631,9 @@ app.frame("/finish", async (c) => {
             userInformation,
             ucs,
           },
+          pinataMetadata: {
+            name: `${userInformation.username}'s choices`,
+          },
         },
         {
           headers: {
