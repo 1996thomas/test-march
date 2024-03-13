@@ -314,7 +314,7 @@ export const app = new Frog<{ State: State }>({
 
 //@ts-ignore
 app.frame("/", async (c) => {
-  const { buttonValue, deriveState, verified, previousState } = c;
+  const { buttonValue, deriveState, verified, previousState, frameData } = c;
   console.log(previousState.isFollowing);
   let followData;
   if (!previousState.isFollowing) {
@@ -325,7 +325,7 @@ app.frame("/", async (c) => {
     };
     await axios
       .get(
-        `·https://api.pinata.cloud/v3/farcaster/users?following=true&fid=${fid}`,
+        `·https://api.pinata.cloud/v3/farcaster/users?following=true&fid=${frameData?.fid}`,
         options
       )
       .then((response) => (followData = response.data))
