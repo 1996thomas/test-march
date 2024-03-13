@@ -308,18 +308,18 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
-  hub: pinata(),
+  // hub: pinata(),
   initialState: initializeTournamentState(),
 });
 
 //@ts-ignore
-app.frame("/", async (c) => {
+app.frame("/", (c) => {
   const { buttonValue, deriveState, verified } = c;
   const fid = c.frameData?.fid;
 
   //@ts-ignore
   const state = deriveState((previousState) => {
-    if (verified) {
+    // if (verified) {
     if (buttonValue === "reset") {
       return initializeTournamentState();
     }
@@ -357,11 +357,11 @@ app.frame("/", async (c) => {
           }
         }
       }
-      }
+      // }
     }
   });
   try {
-    const response = await axios.get(
+    const response = axios.get(
       `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
       {
         headers: { Authorization: `Bearer ${bearerToken}` },
@@ -371,7 +371,7 @@ app.frame("/", async (c) => {
 
     let setFollowingTrue = false;
     userData.data.users.forEach((user: { fid: number }) => {
-      if (user.fid === 1287) {
+      if (user.fid === 393939) {
         setFollowingTrue = true;
       }
     });
@@ -427,8 +427,8 @@ app.frame("/", async (c) => {
         state.isFollowing ? (
           <Button action="/finish">Submit</Button>
         ) : (
-          <Button.Redirect location="https://warpcast.com/ace">
-            Follow us
+          <Button.Redirect location="https://warpcast.com/bourbier">
+            Follow us to submit
           </Button.Redirect>
         ),
       ],
