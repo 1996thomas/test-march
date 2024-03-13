@@ -593,7 +593,6 @@ app.frame("/finish", (c) => {
   console.log(c.previousState.ucs);
   const ucs = c.previousState.ucs;
   const parsedJson = JSON.stringify(ucs);
-  console.log(bearerToken);
 
   const options = {
     method: "POST",
