@@ -314,9 +314,28 @@ export const app = new Frog<{ State: State }>({
 
 //@ts-ignore
 app.frame("/", async (c) => {
-  const { buttonValue, deriveState, verified } = c;
-  const fid = c.frameData?.fid;
-
+  const { buttonValue, deriveState, verified, previousState } = c;
+  console.log(previousState.isFollowing);
+  let followData;
+  if (!previousState.isFollowing) {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    };
+    await axios
+      .get(
+        "https://api.pinata.cloud/v3/farcaster/users?following=true&fid=368362",
+        options
+      )
+      .then((response) => (followData = response.data))
+      .catch((err) => console.error(err));
+  }
+  followData !== undefined &&
+    //@ts-ignore
+    followData.data.users.map((user: { fid: number }) =>
+      user.fid === 2 ? (previousState.isFollowing = true) : null
+    );
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
@@ -360,7 +379,10 @@ app.frame("/", async (c) => {
       }
     }
   });
+
   if (state.ps.length === 1) {
+    //fetch all following + maps on it
+    console.log("salut");
     return c.res({
       image: (
         <div
@@ -401,8 +423,13 @@ app.frame("/", async (c) => {
       ),
       intents: [
         <Button.Reset>Reset Tournament</Button.Reset>,
-
-        <Button action="/finish">Submit</Button>,
+        previousState.isFollowing ? (
+          <Button action="/finish">Complete bet</Button>
+        ) : (
+          <Button.Link href="https://warpcast.com/bourbier">
+            Follow us
+          </Button.Link>
+        ),
       ],
     });
   } else {
@@ -605,7 +632,6 @@ app.frame("/finish", async (c) => {
   const ucs = c.previousState.ucs;
   const fid = c.frameData?.fid;
   let userData = [];
-  let setFollowingTrue = false;
 
   if (fid) {
     try {
@@ -629,24 +655,6 @@ app.frame("/finish", async (c) => {
       });
     }
   }
-  try {
-    const response = await axios.get(
-      `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
-      {
-        headers: { Authorization: `Bearer ${bearerToken}` },
-      }
-    );
-    const userData = response.data;
-
-    let setFollowingTrue = false;
-    userData.data.users.forEach((user: { fid: number }) => {
-      if (user.fid === 1287) {
-        setFollowingTrue = true;
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
   if (ucs && userData) {
     const userInformation = {
       username: userData.data.username,
@@ -657,54 +665,36 @@ app.frame("/finish", async (c) => {
       recovery_address: userData.data.custody_address,
     };
 
-    if (setFollowingTrue) {
-      try {
-        const postResponse = await axios.post(
-          "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-          {
-            pinataContent: {
-              userInformation,
-              ucs,
-            },
-            pinataMetadata: {
-              name: `${userInformation.username}'s choices`,
-            },
+    try {
+      const postResponse = await axios.post(
+        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        {
+          pinataContent: {
+            userInformation,
+            ucs,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${bearerToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log("Réponse POST :", postResponse.data);
-      } catch (error) {
-        return c.res({
-          image: (
-            <div style={{ display: "flex" }}>
-              <p style={{ color: "white", fontSize: "2rem" }}>
-                Error while posting data on Pinata, try later
-              </p>
-            </div>
-          ),
-          intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
-        });
-      }
-    } else {
+          pinataMetadata: {
+            name: `${userInformation.username}'s choices`,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Réponse POST :", postResponse.data);
+    } catch (error) {
       return c.res({
         image: (
           <div style={{ display: "flex" }}>
             <p style={{ color: "white", fontSize: "2rem" }}>
-              You need to follow us brother
+              Error while posting data on Pinata, try later
             </p>
           </div>
         ),
-        intents: [
-          <Button action="/finish">🔁 Retry 🔁</Button>,
-          <Button.Redirect location="https://warpcast.com/ace">
-            Follow us
-          </Button.Redirect>,
-        ],
+        intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
       });
     }
   }
