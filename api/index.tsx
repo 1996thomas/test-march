@@ -289,6 +289,7 @@ type State = {
   mn: number; // mn for "matchNumber"
   ucs?: MatchResult[]; // ucs for "userChoices"
   showSummary: boolean;
+  isFollowing: boolean;
 };
 
 function initializeTournamentState(): State {
@@ -300,6 +301,7 @@ function initializeTournamentState(): State {
     mn: 1,
     ucs: [],
     showSummary: false,
+    isFollowing: false,
   };
 }
 
@@ -311,52 +313,77 @@ export const app = new Frog<{ State: State }>({
 });
 
 //@ts-ignore
-app.frame("/", (c) => {
+app.frame("/", async (c) => {
   const { buttonValue, deriveState, verified } = c;
+  const fid = c.frameData?.fid;
+
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      if (buttonValue === "reset") {
-        return initializeTournamentState();
-      }
-      if (buttonValue === "summary") {
-        return { ...previousState, showSummary: !previousState.showSummary };
-      }
+    if (buttonValue === "reset") {
+      return initializeTournamentState();
+    }
+    if (buttonValue === "summary") {
+      return { ...previousState, showSummary: !previousState.showSummary };
+    }
 
-      if (buttonValue && buttonValue.startsWith("select-")) {
-        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-        const isWinner =
-          previousState.ps[previousState.cmi] === selectedIndex ||
-          previousState.ps[previousState.cmi + 1] === selectedIndex;
+    if (buttonValue && buttonValue.startsWith("select-")) {
+      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+      const isWinner =
+        previousState.ps[previousState.cmi] === selectedIndex ||
+        previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-        if (isWinner) {
-          const winnerIndex = selectedIndex;
-          previousState.nr.push(winnerIndex);
+      if (isWinner) {
+        const winnerIndex = selectedIndex;
+        previousState.nr.push(winnerIndex);
 
-          if (!previousState.ucs) previousState.ucs = [];
-          previousState.ucs.push({
-            m: previousState.mn,
-            w: winnerIndex,
-          });
+        if (!previousState.ucs) previousState.ucs = [];
+        previousState.ucs.push({
+          m: previousState.mn,
+          w: winnerIndex,
+        });
 
-          previousState.mn++;
+        previousState.mn++;
 
-          if (previousState.cmi + 2 < previousState.ps.length) {
-            previousState.cmi += 2;
+        if (previousState.cmi + 2 < previousState.ps.length) {
+          previousState.cmi += 2;
+        } else {
+          if (previousState.nr.length === 1) {
+            previousState.ps = [previousState.nr[0]];
           } else {
-            if (previousState.nr.length === 1) {
-              previousState.ps = [previousState.nr[0]];
-            } else {
-              previousState.ps = [...previousState.nr];
-              previousState.nr = [];
-              previousState.cmi = 0;
-            }
+            previousState.ps = [...previousState.nr];
+            previousState.nr = [];
+            previousState.cmi = 0;
           }
         }
       }
+      }
     }
   });
+  try {
+    const response = await axios.get(
+      `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
+      {
+        headers: { Authorization: `Bearer ${bearerToken}` },
+      }
+    );
+    const userData = response.data;
+
+    let setFollowingTrue = false;
+    userData.data.users.forEach((user: { fid: number }) => {
+      if (user.fid === 1) {
+        setFollowingTrue = true;
+      }
+    });
+
+    if (setFollowingTrue) {
+      state.isFollowing = true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
   if (state.ps.length === 1) {
+    console.log(state.isFollowing);
     return c.res({
       image: (
         <div
@@ -397,7 +424,13 @@ app.frame("/", (c) => {
       ),
       intents: [
         <Button.Reset>Reset Tournament</Button.Reset>,
-        <Button action="/finish">Complete bet</Button>,
+        state.isFollowing ? (
+          <Button action="/finish">Submit</Button>
+        ) : (
+          <Button.Redirect location="https://warpcast.com/ace">
+            Follow us
+          </Button.Redirect>
+        ),
       ],
     });
   } else {
@@ -554,6 +587,7 @@ app.frame("/", (c) => {
 
 app.frame("/summary", (c) => {
   const state = c.previousState;
+  const button = c.buttonValue;
   return c.res({
     image: (
       <div
@@ -583,7 +617,10 @@ app.frame("/summary", (c) => {
       </div>
     ),
     intents: [
-      <Button action="/" value="back">
+      <Button
+        action={button === "final_summary" ? "/finish" : "/"}
+        value="back"
+      >
         Go back
       </Button>,
     ],
@@ -602,7 +639,7 @@ app.frame("/finish", async (c) => {
       const response = await axios.get(
         `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
         {
-          headers: { Authorization: `Beare ${bearerToken}` },
+          headers: { Authorization: `Bearer 123` },
         }
       );
       userData = response.data;
@@ -610,7 +647,9 @@ app.frame("/finish", async (c) => {
       return c.res({
         image: (
           <div style={{ display: "flex" }}>
-            <p>Error while posting data on Pinata, try again</p>
+            <p style={{ color: "white", fontSize: "2rem" }}>
+              Error while posting data on Pinata, try later
+            </p>
           </div>
         ),
         intents: <Button action="/finish">Retry</Button>,
@@ -647,17 +686,43 @@ app.frame("/finish", async (c) => {
         }
       );
       console.log("Réponse POST :", postResponse.data);
-    } catch (postError) {
-      console.error("Erreur lors de l'envoi des données :", postError);
+    } catch (error) {
+      return c.res({
+        image: (
+          <div style={{ display: "flex" }}>
+            <p style={{ color: "white", fontSize: "2rem" }}>
+              Error while posting data on Pinata, try later
+            </p>
+          </div>
+        ),
+        intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
+      });
     }
   }
 
   return c.res({
     image: (
-      <div style={{ display: "flex", color: "white", fontSize: "3rem" }}>
-        Saulo the best
+      <div
+        style={{
+          display: "flex",
+          color: "white",
+          fontSize: "3rem",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        <p>
+          Your choices have been submitted, see you on April 4 for the results
+        </p>
+        <p>don't forget to mint your official participation NFT !</p>
       </div>
     ),
+    intents: [
+      <Button>Mint</Button>,
+      <Button action="/summary" value="final_summary">
+        Submitted choices
+      </Button>,
+    ],
   });
 });
 
