@@ -313,75 +313,53 @@ export const app = new Frog<{ State: State }>({
 });
 
 //@ts-ignore
-app.frame("/", (c) => {
+app.frame("/", async (c) => {
   const { buttonValue, deriveState, verified } = c;
   const fid = c.frameData?.fid;
 
   //@ts-ignore
   const state = deriveState((previousState) => {
-    // if (verified) {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+    if (verified) {
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
-        previousState.nr.push(winnerIndex);
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        if (!previousState.ucs) previousState.ucs = [];
-        previousState.ucs.push({
-          m: previousState.mn,
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
         }
       }
-      // }
     }
   });
-  try {
-    const response = axios.get(
-      `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
-      {
-        headers: { Authorization: `Bearer ${bearerToken}` },
-      }
-    );
-    const userData = response.data;
-
-    let setFollowingTrue = false;
-    userData.data.users.forEach((user: { fid: number }) => {
-      if (user.fid === 393939) {
-        setFollowingTrue = true;
-      }
-    });
-
-    if (setFollowingTrue) {
-      state.isFollowing = true;
-    }
-  } catch (error) {
-    console.log(error);
-  }
   if (state.ps.length === 1) {
     console.log(state.isFollowing);
     return c.res({
@@ -437,6 +415,29 @@ app.frame("/", (c) => {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
     if (state.ps.length > state.cmi + 1) {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
+      try {
+        const response = await axios.get(
+          `https://api.pinata.cloud/v3/farcaster/users?${fid}=&following=true`,
+          {
+            headers: { Authorization: `Bearer ${bearerToken}` },
+          }
+        );
+        const userData = response.data;
+
+        let setFollowingTrue = false;
+        if (userData !== undefined) {
+          userData.data.users.forEach((user: { fid: number }) => {
+            if (user.fid === 1287) {
+              setFollowingTrue = true;
+            }
+          });
+        }
+        if (setFollowingTrue) {
+          state.isFollowing = true;
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
       return c.res({
         image: (
