@@ -385,7 +385,7 @@ app.frame("/", (c) => {
               style={{
                 borderRadius: "100px",
                 padding: "0",
-                border: "3px solid #f4efe9",
+                border: "4px solid #f4efe9",
               }}
               src={teams[state.ps[0]].logo}
               alt=""
