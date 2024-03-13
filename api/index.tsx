@@ -325,7 +325,7 @@ app.frame("/", async (c) => {
     };
     await axios
       .get(
-        "https://api.pinata.cloud/v3/farcaster/users?following=true&fid=368362",
+        `·https://api.pinata.cloud/v3/farcaster/users?following=true&fid=${fid}`,
         options
       )
       .then((response) => (followData = response.data))
@@ -334,7 +334,7 @@ app.frame("/", async (c) => {
   followData !== undefined &&
     //@ts-ignore
     followData.data.users.map((user: { fid: number }) =>
-      user.fid === 2 ? (previousState.isFollowing = true) : null
+      user.fid === 1 ? (previousState.isFollowing = true) : null
     );
   //@ts-ignore
   const state = deriveState((previousState) => {
@@ -382,7 +382,24 @@ app.frame("/", async (c) => {
 
   if (state.ps.length === 1) {
     //fetch all following + maps on it
-    console.log("salut");
+    if (buttonValue === "redirect") {
+      state.isFollowing = true;
+      return c.res({
+        image: (
+          <div style={{ display: "flex" }}>
+            <img src="/logo.png" alt="" />
+            <p>JOIN US </p>
+          </div>
+        ),
+        intents: [
+          <Button.Link href="https://warpcast.com/bourbier">
+            Join Krause House
+          </Button.Link>,
+          <Button action="/">Back</Button>,
+        ],
+      });
+    }
+
     return c.res({
       image: (
         <div
@@ -392,8 +409,10 @@ app.frame("/", async (c) => {
             display: "flex",
             width: "100%",
             textAlign: "center",
-            justifyContent: "center",
+            justifyContent: "space-around",
+            alignItems: "center",
             height: "100%",
+            padding: "2rem",
           }}
         >
           <div
@@ -419,6 +438,13 @@ app.frame("/", async (c) => {
             />
             <p>{teams[state.ps[0]].name}</p>
           </div>
+          {state.isFollowing ? (
+            <p></p>
+          ) : (
+            <p style={{ alignText: "center", color: white, fontSize: 30 }}>
+              ⚠️ You have to follow Krause House to win a prize ⚠️{" "}
+            </p>
+          )}
         </div>
       ),
       intents: [
@@ -426,9 +452,7 @@ app.frame("/", async (c) => {
         previousState.isFollowing ? (
           <Button action="/finish">Complete bet</Button>
         ) : (
-          <Button.Link href="https://warpcast.com/bourbier">
-            Follow us
-          </Button.Link>
+          <Button value="redirect">Follow us</Button>
         ),
       ],
     });
