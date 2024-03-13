@@ -316,43 +316,43 @@ app.frame("/", (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
-        previousState.nr.push(winnerIndex);
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        if (!previousState.ucs) previousState.ucs = [];
-        previousState.ucs.push({
-          m: previousState.mn,
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
         }
-      }
       }
     }
   });
@@ -595,7 +595,14 @@ app.frame("/summary", (c) => {
 app.frame("/finish", async (c) => {
   const ucs = c.previousState.ucs;
   const fid = c.frameData?.fid;
-  let userData = [];
+  let userData = {
+    username: "",
+    display_name: "",
+    fid: null,
+    avatar: "",
+    custody_address: "",
+    recovery_address: "",
+  };
 
   if (fid) {
     try {
@@ -605,7 +612,14 @@ app.frame("/finish", async (c) => {
           headers: { Authorization: `Bearer ${bearerToken}` },
         }
       );
-      userData = response.data;
+      userData = {
+        username: response.data.username,
+        display_name: response.data.display_name,
+        fid: response.data.fid,
+        avatar: response.data.pfp_url,
+        custody_address: response.data.custody_address,
+        recovery_address: response.data.recovery_address,
+      };
     } catch (error) {
       console.error(
         "Erreur lors de la récupération des données utilisateur :",
