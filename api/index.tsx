@@ -602,15 +602,19 @@ app.frame("/finish", async (c) => {
       const response = await axios.get(
         `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
         {
-          headers: { Authorization: `Bearer ${bearerToken}` },
+          headers: { Authorization: `Beare ${bearerToken}` },
         }
       );
       userData = response.data;
     } catch (error) {
-      console.error(
-        "Erreur lors de la récupération des données utilisateur :",
-        error
-      );
+      return c.res({
+        image: (
+          <div style={{ display: "flex" }}>
+            <p>Error while posting data on Pinata, try again</p>
+          </div>
+        ),
+        intents: <Button action="/finish">Retry</Button>,
+      });
     }
   }
   if (ucs && userData) {
