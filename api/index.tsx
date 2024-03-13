@@ -371,7 +371,7 @@ app.frame("/", async (c) => {
 
     let setFollowingTrue = false;
     userData.data.users.forEach((user: { fid: number }) => {
-      if (user.fid === 1) {
+      if (user.fid === 1287) {
         setFollowingTrue = true;
       }
     });
