@@ -316,43 +316,43 @@ app.frame("/", (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      if (buttonValue === "reset") {
-        return initializeTournamentState();
-      }
-      if (buttonValue === "summary") {
-        return { ...previousState, showSummary: !previousState.showSummary };
-      }
+    if (buttonValue === "reset") {
+      return initializeTournamentState();
+    }
+    if (buttonValue === "summary") {
+      return { ...previousState, showSummary: !previousState.showSummary };
+    }
 
-      if (buttonValue && buttonValue.startsWith("select-")) {
-        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-        const isWinner =
-          previousState.ps[previousState.cmi] === selectedIndex ||
-          previousState.ps[previousState.cmi + 1] === selectedIndex;
+    if (buttonValue && buttonValue.startsWith("select-")) {
+      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+      const isWinner =
+        previousState.ps[previousState.cmi] === selectedIndex ||
+        previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-        if (isWinner) {
-          const winnerIndex = selectedIndex;
-          previousState.nr.push(winnerIndex);
+      if (isWinner) {
+        const winnerIndex = selectedIndex;
+        previousState.nr.push(winnerIndex);
 
-          if (!previousState.ucs) previousState.ucs = [];
-          previousState.ucs.push({
-            m: previousState.mn,
-            w: winnerIndex,
-          });
+        if (!previousState.ucs) previousState.ucs = [];
+        previousState.ucs.push({
+          m: previousState.mn,
+          w: winnerIndex,
+        });
 
-          previousState.mn++;
+        previousState.mn++;
 
-          if (previousState.cmi + 2 < previousState.ps.length) {
-            previousState.cmi += 2;
+        if (previousState.cmi + 2 < previousState.ps.length) {
+          previousState.cmi += 2;
+        } else {
+          if (previousState.nr.length === 1) {
+            previousState.ps = [previousState.nr[0]];
           } else {
-            if (previousState.nr.length === 1) {
-              previousState.ps = [previousState.nr[0]];
-            } else {
-              previousState.ps = [...previousState.nr];
-              previousState.nr = [];
-              previousState.cmi = 0;
-            }
+            previousState.ps = [...previousState.nr];
+            previousState.nr = [];
+            previousState.cmi = 0;
           }
         }
+      }
       }
     }
   });
@@ -590,21 +590,38 @@ app.frame("/summary", (c) => {
   });
 });
 
-
 // Votre code précédent reste le même jusqu'à cette partie
 
 app.frame("/finish", async (c) => {
   const ucs = c.previousState.ucs;
-  const parsedJson = JSON.stringify(ucs);
+  const fid = c.frameData?.fid;
+  let userData = [];
 
-  const url = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
-
-  if (ucs) {
+  if (fid) {
     try {
-      const response = await axios.post(
-        url,
+      const response = await axios.get(
+        `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
         {
-          pinataContent: { ucs: parsedJson },
+          headers: { Authorization: `Bearer ${bearerToken}` },
+        }
+      );
+      userData = response.data;
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des données utilisateur :",
+        error
+      );
+    }
+  }
+  if (ucs && userData) {
+    try {
+      const postResponse = await axios.post(
+        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        {
+          pinataContent: {
+            ucs,
+            userData,
+          },
         },
         {
           headers: {
@@ -613,10 +630,9 @@ app.frame("/finish", async (c) => {
           },
         }
       );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+      console.log("Réponse POST :", postResponse.data);
+    } catch (postError) {
+      console.error("Erreur lors de l'envoi des données :", postError);
     }
   }
 
