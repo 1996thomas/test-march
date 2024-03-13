@@ -588,8 +588,8 @@ app.frame("/summary", (c) => {
 });
 
 app.frame("/finish", (c) => {
-  const bearerToken = process.env.BEARER_TOKEN;
   dotenv.config();
+  const bearerToken = process.env.BEARER_TOKEN;
   console.log(c.previousState.ucs);
   const ucs = c.previousState.ucs;
   const parsedJson = JSON.stringify(ucs);
