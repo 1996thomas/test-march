@@ -594,19 +594,15 @@ app.frame("/finish", (c) => {
   const ucs = c.previousState.ucs;
   const parsedJson = JSON.stringify(ucs);
 
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${bearerToken}`,
-      "Content-Type": "application/json",
-    },
-    body: `{"pinataContent":{"ucs":${parsedJson}}}`,
-  };
-
   if (ucs) {
     //@ts-ignore
-    fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", options)
-      .then((response) => response.json())
+    const options = {
+      method: "GET",
+      headers: { Authorization: `Bearer ${bearerToken}` },
+    };
+
+    fetch("https://api.pinata.cloud/data/pinList", options)
+      .then((response) => console.log(response))
       .then((response) => console.log(response))
       .catch((err) => console.error(err));
   }
