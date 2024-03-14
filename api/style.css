@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "ChakraPetch";
+  src: url("/ChakraPetch-Bold.ttf") format("truetype");
+}
+
+*{
+    font-family: "ChakraPetch", sans-serif;
+}
+p{
+    font-family: "ChakraPetch", sans-serif;
+}
+
+.salut{
+  font-size: 3rem;
+}

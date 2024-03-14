@@ -3,7 +3,6 @@ import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
 import dotenv from "dotenv";
 import axios from "axios";
-
 dotenv.config();
 const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
@@ -265,9 +264,18 @@ const teamsData = {
   },
 };
 
-const primaryColor = "#AE3EFF";
+const primaryColor = "#0087F7";
 const bgColor = "#101013";
 const white = "#F4EFE9";
+
+const regionColor = {
+  south: "#00C1AD",
+  midwest: "#FFA901",
+  west: "#AB87FF",
+  east: "#E54E47",
+  final_four: "yellow",
+  final: "orange",
+};
 
 type MatchResult = {
   m: number; // m pour "match"
@@ -312,9 +320,53 @@ export const app = new Frog<{ State: State }>({
   hub: pinata(),
   initialState: initializeTournamentState(),
 });
-
+app.frame("/", (c) => {
+  return c.res({
+    image: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          padding: "9rem",
+          gap: "2rem",
+        }}
+      >
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
+        <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+          <img src="/Eco.png" width={96} alt="" />
+          <p style={{ fontSize: "2rem", color: white }}>X</p>
+          <img src="/Krause_House.png" width={120} alt="" />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <p style={{ color: primaryColor, fontSize: "5rem" }}>
+            March Madness 2024
+          </p>
+          <p style={{ color: white, fontSize: "3rem" }}>Bracket Tourney</p>
+        </div>
+      </div>
+    ),
+    intents: [<Button action="/tournament">Enter the contest</Button>],
+  });
+});
 //@ts-ignore
-app.frame("/", async (c) => {
+app.frame("/tournament", async (c) => {
   const { buttonValue, deriveState, verified, previousState, frameData } = c;
   console.log(previousState.isFollowing);
   let followData;
@@ -395,10 +447,10 @@ app.frame("/", async (c) => {
           </div>
         ),
         intents: [
-          <Button.Link href="https://warpcast.com/bourbier">
+          <Button.Link href="https://warpcast.com/~/channel/framemadness">
             Join Krause House
           </Button.Link>,
-          <Button action="/">Back</Button>,
+          <Button action="/tournament">Back</Button>,
         ],
       });
     }
@@ -451,121 +503,123 @@ app.frame("/", async (c) => {
         </div>
       ),
       intents: [
-        <Button.Reset>Reset Tournament</Button.Reset>,
         previousState.isFollowing ? (
           <Button action="/finish">Complete bet</Button>
         ) : (
           <Button value="redirect">Follow us</Button>
         ),
+        <Button action="/summary" value="summary">
+          Summary
+        </Button>,
+        <Button.Reset>Reset Tournament</Button.Reset>,
       ],
     });
   } else {
     // Assurez-vous que nous avons deux participants pour le match actuel avant de continuer
     if (state.ps.length > state.cmi + 1) {
       const matchParticipants = [state.ps[state.cmi], state.ps[state.cmi + 1]];
-
       return c.res({
         image: (
           <div
             style={{
               flexDirection: "column",
               display: "flex",
-              fontSize: 60,
               width: "100%",
-              textAlign: "center",
               justifyContent: "space-between",
               height: "100%",
+              textAlign: "center",
             }}
           >
             <img
-              width="15%"
-              height="15%"
-              src="/logo.png"
+              src="/background.png"
+              width={1200}
               style={{
                 position: "absolute",
-                top: "17%",
-                left: "12%",
-                opacity: ".2",
-                transform: "translate(-50%,-40%)",
+                top: 0,
+                left: 0,
               }}
+              alt=""
             />
             <div style={{ display: "flex", flex: "0" }}>
-              <span
-                style={{
-                  display: "flex",
-                  width: `${Math.round((state.mn / 64) * 100)}%`,
-                  height: "20px",
-                  background: primaryColor,
-                  textAlign: "center",
-                  position: "relative",
-                }}
-              ></span>
-              <p
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "flex-end",
-                  paddingBottom: "25px",
-                  fontSize: "2rem",
-                  width: "120px",
-                  height: "120px",
-                  color: "white",
-                  position: "absolute",
-                  top: "-90px",
-                  right: "-13px",
-                  transform: "translateY(0%)",
-                  backgroundColor: bgColor,
-                  border: `5px solid ${primaryColor}`,
-                  borderRadius: "50%",
-                }}
-              >
-                {Math.round((state.mn / 64) * 100)}%
-              </p>
+              {/* @ts-ignore */}
+              {Math.round((state.mn / 64) * 100 > 3) && (
+                <span
+                  style={{
+                    width: `${Math.round((state.mn / 66) * 100)}%`,
+                    height: "24px",
+                    backgroundColor: roundTest(state.mn, "progress"),
+                    margin: "2rem",
+                    borderRadius: 100,
+                    position: "relative",
+                    minWidth: "50px",
+                  }}
+                >
+                  <p
+                    style={{
+                      display: "flex",
+                      color: white,
+                      fontSize: "1.2rem",
+                      position: "absolute",
+                      right: "0",
+                      top: "0",
+                      transform: "translate(-15%,-70%)",
+                    }}
+                  >
+                    {Math.round((state.mn / 63) * 100)}%
+                  </p>
+                </span>
+              )}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "2rem",
+                justifyContent: "center",
+                opacity: ".4",
+                marginTop: "5rem",
+              }}
+            >
+              <img src="/Eco.png" width={80} alt="" />
+              <p style={{ fontSize: "2rem", color: white }}>X</p>
+              <img src="/Krause_House.png" width={100} alt="" />
             </div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
                 borderRadius: "1rem",
+                flexDirection: "column",
                 fontSize: "1.8rem",
                 textAlign: "center",
                 margin: "0 auto",
                 width: "40%",
-                border: `6px solid ${primaryColor}`,
-                backgroundColor: bgColor,
+                position: "absolute",
+                top: "35%",
+                left: "50%",
+                transform: "translate(-50%, 0%)",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  height: "15%",
-                  color: white,
-                  fontSize: "2rem",
-                  letterSpacing: "-1px",
-                }}
-              >
-                {roundTest(state.mn, "tournamentStatus")}
-              </div>
+              {roundTest(state.mn, "tournamentStatus")}
             </div>
             <div
               style={{
                 display: "flex",
+                justifyContent: "space-between",
                 color: white,
                 fontSize: "2rem",
-                justifyContent: "space-between",
-                height: "65%",
+                height: "67%",
               }}
-              className="match__wrapper"
             >
-              {...matchParticipants.map((id) => (
+              {...matchParticipants.map((id, i) => (
                 <div
                   style={{
-                    flex: "2",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     flexDirection: "column",
                     position: "relative",
+                    alignItems: "center",
+                    margin: "2rem",
+                    width: "35%",
                   }}
                 >
                   <span
@@ -579,15 +633,16 @@ app.frame("/", async (c) => {
                       left: "50%",
                       transform: "translate(-50%,-60%)",
                       padding: "40px",
-                      filter: "blur(100px)",
+                      filter: "blur(1px) brightness(0.3)",
                       opacity: ".1",
                     }}
                   />
-                  <img width="210" height="210" src={teams[id].logo} alt="" />
+                  <img width="250" height="250" src={teams[id].logo} alt="" />
                   <p
                     style={{
                       color: white,
-                      fontSize: "2.9rem",
+                      fontSize: "2rem",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {teams[id].name}
@@ -624,6 +679,16 @@ app.frame("/summary", (c) => {
           flexWrap: "wrap",
         }}
       >
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
         {state.ucs?.map((uc) => (
           <div style={{ display: "flex" }}>
             <img
@@ -644,7 +709,7 @@ app.frame("/summary", (c) => {
     ),
     intents: [
       <Button
-        action={button === "final_summary" ? "/finish" : "/"}
+        action={button === "final_summary" ? "/finish" : "/tournament"}
         value="back"
       >
         Go back
@@ -744,135 +809,368 @@ app.frame("/finish", async (c) => {
       </div>
     ),
     intents: [
-      <Button>Mint</Button>,
       <Button action="/summary" value="final_summary">
         Submitted choices
       </Button>,
+      <Button>Mint</Button>,
     ],
   });
 });
 
-const regionColor = {
-  south: "#00C1AD",
-  midwest: "#FFA901",
-  west: "AB87FF",
-  east: "#E54E47",
-  final_four: "",
-  final: "",
-};
-
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
   if (matchNum <= 8) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
     return i ? (
-      <p style={{ color: regionColor.south }}>South - First round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+          South Region
+        </p>
+        <p style={{ color: white }}>First round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.south}`
     );
   } else if (matchNum <= 16) {
+    if (i === "progress") {
+      return regionColor.east;
+    }
     return i ? (
-      <p style={{ color: regionColor.east }}>East - First round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+          East Region
+        </p>
+        <p style={{ color: white }}>First round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.east}`
     );
   } else if (matchNum <= 24) {
+    if (i === "progress") {
+      return regionColor.midwest;
+    }
     return i ? (
-      <p style={{ color: regionColor.midwest }}>Midwest - First round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+          Midwest Region
+        </p>
+        <p style={{ color: white }}>First round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 32) {
+    if (i === "progress") {
+      return regionColor.west;
+    }
+    if (i === "progress") {
+      return regionColor.west;
+    }
     return i ? (
-      <p style={{ color: regionColor.west }}>West - First round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+          West Region
+        </p>
+        <p style={{ color: white }}>First round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.west}`
     );
   } else if (matchNum <= 36) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
     return i ? (
-      <p style={{ color: regionColor.south }}>South - Second round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+          South Region
+        </p>
+        <p style={{ color: white }}>Second round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.south}`
     );
   } else if (matchNum <= 40) {
+    if (i === "progress") {
+      return regionColor.east;
+    }
     return i ? (
-      <p style={{ color: regionColor.east }}>East - Second round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+          East Region
+        </p>
+        <p style={{ color: white }}>Second round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.east}`
     );
   } else if (matchNum <= 44) {
+    if (i === "progress") {
+      return regionColor.midwest;
+    }
     return i ? (
-      <p style={{ color: regionColor.midwest }}>Midwest - Second round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+          Midwest Region
+        </p>
+        <p style={{ color: white }}>Second round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 48) {
+    if (i === "progress") {
+      return regionColor.west;
+    }
     return i ? (
-      <p style={{ color: regionColor.west }}>West - Second round</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+          West Region
+        </p>
+        <p style={{ color: white }}>Second round</p>
+      </div>
     ) : (
       `8px solid ${regionColor.west}`
     );
   } else if (matchNum <= 50) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
     return i ? (
-      <p style={{ color: regionColor.south }}>South - Sweet 16</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+          South Region
+        </p>
+        <p style={{ color: white }}>Sweet 16</p>
+      </div>
     ) : (
       `8px solid ${regionColor.south}`
     );
   } else if (matchNum <= 52) {
+    if (i === "progress") {
+      return regionColor.east;
+    }
     return i ? (
-      <p style={{ color: regionColor.east }}>East - Sweet 16</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+          East Region
+        </p>
+        <p style={{ color: white }}>Sweet 16</p>
+      </div>
     ) : (
       `8px solid ${regionColor.east}`
     );
   } else if (matchNum <= 54) {
+    if (i === "progress") {
+      return regionColor.midwest;
+    }
     return i ? (
-      <p style={{ color: regionColor.midwest }}>Midwest - Sweet 16</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+          Midwest Region
+        </p>
+        <p style={{ color: white }}>Sweet 16</p>
+      </div>
     ) : (
       `8px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 56) {
+    if (i === "progress") {
+      return regionColor.west;
+    }
     return i ? (
-      <p style={{ color: regionColor.west }}>West - Sweet 16</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+          West Region
+        </p>
+        <p style={{ color: white }}>Sweet 16</p>
+      </div>
     ) : (
       `8px solid ${regionColor.west}`
     );
   } else if (matchNum === 57) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
     return i ? (
-      <p style={{ color: regionColor.south }}>South - Elite Eight</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+          South Region
+        </p>
+        <p style={{ color: white }}>Elite Eight</p>
+      </div>
     ) : (
       `10px solid ${regionColor.south}`
     );
   } else if (matchNum === 58) {
+    if (i === "progress") {
+      return regionColor.east;
+    }
     return i ? (
-      <p style={{ color: regionColor.east }}>East - Elite Eight</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+          East Region
+        </p>
+        <p style={{ color: white }}>Elite Eight</p>
+      </div>
     ) : (
       `10px solid ${regionColor.east}`
     );
   } else if (matchNum === 59) {
+    if (i === "progress") {
+      return regionColor.midwest;
+    }
     return i ? (
-      <p style={{ color: regionColor.midwest }}>Midwest - Elite Eight</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+          Midwest Region
+        </p>
+        <p style={{ color: white }}>Elite Eight</p>
+      </div>
     ) : (
       `10px solid ${regionColor.midwest}`
     );
   } else if (matchNum === 60) {
+    if (i === "progress") {
+      return regionColor.west;
+    }
     return i ? (
-      <p style={{ color: regionColor.west }}>West - Elite Eight</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+          West Region
+        </p>
+        <p style={{ color: white }}>Elite Eight</p>
+      </div>
     ) : (
       `10px solid ${regionColor.west}`
     );
   } else if (matchNum === 61) {
+    if (i === "progress") {
+      return regionColor.final_four;
+    }
     return i ? (
-      <p style={{ color: regionColor.final_four }}>Final Four</p>
+      <p style={{ fontSize: "3.5rem", color: regionColor.final_four }}>
+        Final Four
+      </p>
     ) : (
       "10px solid yellow"
     );
   } else if (matchNum === 62) {
+    if (i === "progress") {
+      return regionColor.final_four;
+    }
     return i ? (
-      <p style={{ color: regionColor.final_four }}>Final Four</p>
+      <p style={{ fontSize: "3.5rem", color: regionColor.final_four }}>
+        Final Four
+      </p>
     ) : (
       "10px solid yellow"
     );
   } else if (matchNum === 63) {
+    if (i === "progress") {
+      return regionColor.final;
+    }
     return i ? (
-      <p style={{ color: regionColor.final }}>NCAA championship</p>
+      <p style={{ fontSize: "3.5rem", color: regionColor.final }}>
+        NCAA championship
+      </p>
     ) : (
       "10px solid yellow"
     );
