@@ -293,7 +293,7 @@ type State = {
 };
 
 function initializeTournamentState(): State {
-  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -308,6 +308,7 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
+  browserLocation: "/",
   hub: pinata(),
   initialState: initializeTournamentState(),
 });
@@ -321,25 +322,23 @@ app.frame("/", async (c) => {
   // Vérifiez si isFollowing est false ET si frameData.fid est défini
   if (!previousState.isFollowing && frameData?.fid) {
     const options = {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
+      headers: { accept: "application/json", api_key: "NEYNAR_API_DOCS" },
     };
 
     await axios
       .get(
-        `https://api.pinata.cloud/v3/farcaster/users?following=true&fid=${frameData.fid}`,
+        "https://api.neynar.com/v2/farcaster/channel/followers?id=framemadness&limit=1000",
         options
       )
       .then((response) => (followData = response.data))
       .catch((err) => console.error(err));
   }
 
-  followData !== undefined &&
-    //@ts-ignore
-    followData.data.users.map((user: { fid: number }) =>
-      user.fid === 1 ? (previousState.isFollowing = true) : null
-    );
+  //@ts-ignore
+  followData?.users.map((user) => {
+    user.fid === frameData?.fid ? (previousState.isFollowing = true) : null;
+  });
+
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
@@ -391,7 +390,7 @@ app.frame("/", async (c) => {
       return c.res({
         image: (
           <div style={{ display: "flex" }}>
-            <img src="/logo.png" alt="" />
+            <img height={100} src="/logo.png" alt="" />
             <p>JOIN US </p>
           </div>
         ),
@@ -753,45 +752,130 @@ app.frame("/finish", async (c) => {
   });
 });
 
+const regionColor = {
+  south: "#00C1AD",
+  midwest: "#FFA901",
+  west: "AB87FF",
+  east: "#E54E47",
+  final_four: "",
+  final: "",
+};
+
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
   if (matchNum <= 8) {
-    return i ? <p>South - First round</p> : "8px solid green";
+    return i ? (
+      <p style={{ color: regionColor.south }}>South - First round</p>
+    ) : (
+      `8px solid ${regionColor.south}`
+    );
   } else if (matchNum <= 16) {
-    return i ? <p>East - First round</p> : "8px solid red";
+    return i ? (
+      <p style={{ color: regionColor.east }}>East - First round</p>
+    ) : (
+      `8px solid ${regionColor.east}`
+    );
   } else if (matchNum <= 24) {
-    return i ? <p>Midwest - First round</p> : "8px solid orange";
+    return i ? (
+      <p style={{ color: regionColor.midwest }}>Midwest - First round</p>
+    ) : (
+      `8px solid ${regionColor.midwest}`
+    );
   } else if (matchNum <= 32) {
-    return i ? <p>West - First round</p> : "8px solid blue";
+    return i ? (
+      <p style={{ color: regionColor.west }}>West - First round</p>
+    ) : (
+      `8px solid ${regionColor.west}`
+    );
   } else if (matchNum <= 36) {
-    return i ? <p>South - Second round</p> : "8px solid green";
+    return i ? (
+      <p style={{ color: regionColor.south }}>South - Second round</p>
+    ) : (
+      `8px solid ${regionColor.south}`
+    );
   } else if (matchNum <= 40) {
-    return i ? <p>East - Second round</p> : "8px solid red";
+    return i ? (
+      <p style={{ color: regionColor.east }}>East - Second round</p>
+    ) : (
+      `8px solid ${regionColor.east}`
+    );
   } else if (matchNum <= 44) {
-    return i ? <p>Midwest - Second round</p> : "8px solid orange";
+    return i ? (
+      <p style={{ color: regionColor.midwest }}>Midwest - Second round</p>
+    ) : (
+      `8px solid ${regionColor.midwest}`
+    );
   } else if (matchNum <= 48) {
-    return i ? <p>West - Second round</p> : "8px solid blue";
+    return i ? (
+      <p style={{ color: regionColor.west }}>West - Second round</p>
+    ) : (
+      `8px solid ${regionColor.west}`
+    );
   } else if (matchNum <= 50) {
-    return i ? <p>South - Sweet 16</p> : "8px solid green";
+    return i ? (
+      <p style={{ color: regionColor.south }}>South - Sweet 16</p>
+    ) : (
+      `8px solid ${regionColor.south}`
+    );
   } else if (matchNum <= 52) {
-    return i ? <p>East - Sweet 16</p> : "8px solid red";
+    return i ? (
+      <p style={{ color: regionColor.east }}>East - Sweet 16</p>
+    ) : (
+      `8px solid ${regionColor.east}`
+    );
   } else if (matchNum <= 54) {
-    return i ? <p>Midwest - Sweet 16</p> : "8px solid orange";
+    return i ? (
+      <p style={{ color: regionColor.midwest }}>Midwest - Sweet 16</p>
+    ) : (
+      `8px solid ${regionColor.midwest}`
+    );
   } else if (matchNum <= 56) {
-    return i ? <p>West - Sweet 16</p> : "8px solid blue";
+    return i ? (
+      <p style={{ color: regionColor.west }}>West - Sweet 16</p>
+    ) : (
+      `8px solid ${regionColor.west}`
+    );
   } else if (matchNum === 57) {
-    return i ? <p>South - Elite Eight</p> : "10px solid green";
+    return i ? (
+      <p style={{ color: regionColor.south }}>South - Elite Eight</p>
+    ) : (
+      `10px solid ${regionColor.south}`
+    );
   } else if (matchNum === 58) {
-    return i ? <p>East - Elite Eight</p> : "10px solid red";
+    return i ? (
+      <p style={{ color: regionColor.east }}>East - Elite Eight</p>
+    ) : (
+      `10px solid ${regionColor.east}`
+    );
   } else if (matchNum === 59) {
-    return i ? <p>Midwest - Elite Eight</p> : "10px solid orange";
+    return i ? (
+      <p style={{ color: regionColor.midwest }}>Midwest - Elite Eight</p>
+    ) : (
+      `10px solid ${regionColor.midwest}`
+    );
   } else if (matchNum === 60) {
-    return i ? <p>West - Elite Eight</p> : "10px solid blue";
+    return i ? (
+      <p style={{ color: regionColor.west }}>West - Elite Eight</p>
+    ) : (
+      `10px solid ${regionColor.west}`
+    );
   } else if (matchNum === 61) {
-    return i ? <p>Final Four</p> : "10px solid yellow";
+    return i ? (
+      <p style={{ color: regionColor.final_four }}>Final Four</p>
+    ) : (
+      "10px solid yellow"
+    );
   } else if (matchNum === 62) {
-    return i ? <p>Final Four</p> : "10px solid yellow";
+    return i ? (
+      <p style={{ color: regionColor.final_four }}>Final Four</p>
+    ) : (
+      "10px solid yellow"
+    );
   } else if (matchNum === 63) {
-    return i ? <p>NCAA championship</p> : "10px solid yellow";
+    return i ? (
+      <p style={{ color: regionColor.final }}>NCAA championship</p>
+    ) : (
+      "10px solid yellow"
+    );
   } else {
     return ""; // Retour par défaut pour tout numéro de match non géré
   }
