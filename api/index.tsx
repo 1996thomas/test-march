@@ -297,11 +297,10 @@ type State = {
   mn: number; // mn for "matchNumber"
   ucs?: MatchResult[]; // ucs for "userChoices"
   showSummary: boolean;
-  isFollowing: boolean;
 };
 
 function initializeTournamentState(): State {
-  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -309,7 +308,6 @@ function initializeTournamentState(): State {
     mn: 1,
     ucs: [],
     showSummary: false,
-    isFollowing: false,
   };
 }
 
@@ -321,32 +319,6 @@ export const app = new Frog<{ State: State }>({
   initialState: initializeTournamentState(),
 });
 app.frame("/", async (c) => {
-  const { previousState, frameData, verified } = c;
-
-  let followData;
-
-  // Vérifiez si isFollowing est false ET si frameData.fid est défini
-
-  if (verified) {
-    if (frameData?.fid) {
-      const options = {
-        headers: { accept: "application/json", api_key: "NEYNAR_API_DOCS" },
-      };
-
-      await axios
-        .get(
-          "https://api.neynar.com/v2/farcaster/channel/followers?id=framemadness&limit=1000",
-          options
-        )
-        .then((response) => (followData = response.data))
-        .catch((err) => console.error(err));
-    }
-  }
-
-  //@ts-ignore
-  followData?.users.map((channel) => {
-    channel.fid === frameData?.fid ? (previousState.isFollowing = true) : null;
-  });
   return c.res({
     image: (
       <div
@@ -386,143 +358,126 @@ app.frame("/", async (c) => {
           </p>
           <p style={{ color: white, fontSize: "3rem" }}>Bracket Tourney</p>
         </div>
-        {previousState.isFollowing ? (
-          <p></p>
-        ) : (
-          <p style={{ alignText: "center", color: white, fontSize: 30 }}>
-            You have to follow Krause House to win a prize{" "}
-          </p>
-        )}
+
+        <p
+          style={{
+            alignText: "center",
+            color: regionColor.midwest,
+            fontSize: 30,
+          }}
+        >
+          Follow our Warpcast channel to be eligible to win the prize.
+        </p>
       </div>
     ),
     intents: [
       <Button action="/tournament">Enter the contest</Button>,
-      previousState.isFollowing === false && (
-        <Button.Link href="https://warpcast.com/~/channel/framemadness">
-          Follow us
-        </Button.Link>
-      ),
+      <Button.Link href="https://warpcast.com/~/channel/framemadness">
+        Follow us
+      </Button.Link>,
     ],
   });
 });
 //@ts-ignore
 app.frame("/tournament", async (c) => {
-  const { buttonValue, deriveState, verified, previousState } = c;
-  console.log(previousState.isFollowing);
+  const { buttonValue, deriveState, verified } = c;
 
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-      if (buttonValue === "reset") {
-        return initializeTournamentState();
-      }
-      if (buttonValue === "summary") {
-        return { ...previousState, showSummary: !previousState.showSummary };
-      }
+    if (buttonValue === "reset") {
+      return initializeTournamentState();
+    }
+    if (buttonValue === "summary") {
+      return { ...previousState, showSummary: !previousState.showSummary };
+    }
 
-      if (buttonValue && buttonValue.startsWith("select-")) {
-        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-        const isWinner =
-          previousState.ps[previousState.cmi] === selectedIndex ||
-          previousState.ps[previousState.cmi + 1] === selectedIndex;
+    if (buttonValue && buttonValue.startsWith("select-")) {
+      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+      const isWinner =
+        previousState.ps[previousState.cmi] === selectedIndex ||
+        previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-        if (isWinner) {
-          const winnerIndex = selectedIndex;
-          previousState.nr.push(winnerIndex);
+      if (isWinner) {
+        const winnerIndex = selectedIndex;
+        previousState.nr.push(winnerIndex);
 
-          if (!previousState.ucs) previousState.ucs = [];
-          previousState.ucs.push({
-            m: previousState.mn,
-            w: winnerIndex,
-          });
+        if (!previousState.ucs) previousState.ucs = [];
+        previousState.ucs.push({
+          m: previousState.mn,
+          w: winnerIndex,
+        });
 
-          previousState.mn++;
+        previousState.mn++;
 
-          if (previousState.cmi + 2 < previousState.ps.length) {
-            previousState.cmi += 2;
+        if (previousState.cmi + 2 < previousState.ps.length) {
+          previousState.cmi += 2;
+        } else {
+          if (previousState.nr.length === 1) {
+            previousState.ps = [previousState.nr[0]];
           } else {
-            if (previousState.nr.length === 1) {
-              previousState.ps = [previousState.nr[0]];
-            } else {
-              previousState.ps = [...previousState.nr];
-              previousState.nr = [];
-              previousState.cmi = 0;
-            }
+            previousState.ps = [...previousState.nr];
+            previousState.nr = [];
+            previousState.cmi = 0;
           }
         }
+      }
       }
     }
   });
 
   if (state.ps.length === 1) {
-    //fetch all following + maps on it
-    if (buttonValue === "redirect") {
-      state.isFollowing = true;
-      return c.res({
-        image: (
-          <div style={{ display: "flex" }}>
-            <img height={100} src="/logo.png" alt="" />
-            <p>JOIN US </p>
-          </div>
-        ),
-        intents: [
-          <Button.Link href="https://warpcast.com/~/channel/framemadness">
-            Join Krause House
-          </Button.Link>,
-          <Button action="/tournament">Back</Button>,
-        ],
-      });
-    }
-
     return c.res({
       image: (
         <div
           style={{
-            backgroundColor: bgColor,
             flexDirection: "column",
             display: "flex",
             width: "100%",
-            textAlign: "center",
-            justifyContent: "space-around",
             alignItems: "center",
-            height: "100%",
-            padding: "2rem",
+            position: "relative",
           }}
         >
+          <img
+            src="/background.png"
+            width={1200}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
+            alt=""
+          />
           <div
             style={{
               display: "flex",
-              color: white,
-              fontSize: "3rem",
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "space-around",
             }}
           >
+            <p style={{ fontSize: "4rem", color: primaryColor }}>Your Winner</p>
             <img
-              width={400}
-              height={400}
-              style={{
-                borderRadius: "100px",
-                padding: "0",
-                border: "4px solid #f4efe9",
-              }}
+              width={350}
+              height={350}
               src={teams[state.ps[0]].logo}
               alt=""
             />
             <p>{teams[state.ps[0]].name}</p>
           </div>
-          {state.isFollowing ? (
-            <p></p>
-          ) : (
-            <p style={{ alignText: "center", color: white, fontSize: 30 }}>
-              You have to follow Krause House to win a prize{" "}
-            </p>
-          )}
+
+          <p
+            style={{
+              alignText: "center",
+              color: regionColor.midwest,
+              fontSize: 30,
+            }}
+          >
+            Follow our Warpcast channel to be eligible to win a prize.
+          </p>
         </div>
       ),
       intents: [
-        <Button action="/finish">Complete bet</Button>,
+        <Button action="/finish">Submit</Button>,
         <Button action="/summary" value="summary">
           Summary
         </Button>,
@@ -676,6 +631,7 @@ app.frame("/summary", (c) => {
           gap: "1rem",
           padding: "1rem",
           flexWrap: "wrap",
+          width: "100%",
         }}
       >
         <img
@@ -695,9 +651,9 @@ app.frame("/summary", (c) => {
               style={{
                 border: roundTest(uc.m),
                 padding: "10px",
-                width: "86px",
+                width: "96px",
                 borderRadius: "50%",
-                backgroundColor: white,
+                backgroundColor: bgColor,
               }}
               src={teams[uc.w].logo}
               alt=""
@@ -779,8 +735,26 @@ app.frame("/finish", async (c) => {
     } catch (error) {
       return c.res({
         image: (
-          <div style={{ display: "flex" }}>
-            <p style={{ color: "white", fontSize: "2rem" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              position: "relative",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <img
+              src="/background.png"
+              width={1200}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+              alt=""
+            />
+            <p style={{ color: regionColor.midwest, fontSize: "3rem" }}>
               Error while posting data on Pinata, try later
             </p>
           </div>
@@ -795,23 +769,84 @@ app.frame("/finish", async (c) => {
       <div
         style={{
           display: "flex",
-          color: "white",
-          fontSize: "3rem",
           flexDirection: "column",
           gap: "1rem",
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <p>
-          Your choices have been submitted, see you on April 4 for the results
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
+        <p style={{ fontSize: "4rem", color: primaryColor }}>
+          Mint Your Bracket on Base
         </p>
-        <p>don't forget to mint your official participation NFT !</p>
+        <p style={{ color: white, fontSize: "2rem" }}>
+          Don't forget to mint your official participation NFT !
+        </p>
       </div>
     ),
     intents: [
-      <Button action="/summary" value="final_summary">
-        Submitted choices
-      </Button>,
       <Button>Mint</Button>,
+      <Button action="/continue">Continue</Button>,
+    ],
+  });
+});
+
+app.frame("/continue", (c) => {
+  return c.res({
+    image: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
+        <p style={{ fontSize: "4rem", color: primaryColor }}>
+          Congratulations! 🎉
+        </p>
+        <p
+          style={{
+            color: white,
+            fontSize: "2rem",
+            textAlign: "center",
+            width: "80%",
+          }}
+        >
+          Your bracket has been submitted. Follow all the action on our channel
+          and your position on the leaderboard.
+        </p>
+        <p style={{ color: white, fontSize: "2rem", textAlign: "center" }}>
+          Good luck!
+        </p>
+      </div>
+    ),
+    intents: [
+      <Button.Link href="https://example.com">Leaderboard</Button.Link>,
     ],
   });
 });
