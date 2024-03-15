@@ -273,8 +273,8 @@ const regionColor = {
   midwest: "#FFA901",
   west: "#AB87FF",
   east: "#E54E47",
-  final_four: "0087F7",
-  final: "0087F7",
+  final_four: "#0087F7",
+  final: "#0087F7",
 };
 
 type MatchResult = {
@@ -363,7 +363,7 @@ app.frame("/", async (c) => {
           style={{
             alignText: "center",
             color: regionColor.midwest,
-            fontSize: 30,
+            fontSize: "2rem",
           }}
         >
           Follow our Warpcast channel to be eligible to win the prize.
@@ -385,43 +385,43 @@ app.frame("/tournament", async (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
-        previousState.nr.push(winnerIndex);
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        if (!previousState.ucs) previousState.ucs = [];
-        previousState.ucs.push({
-          m: previousState.mn,
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
         }
-      }
       }
     }
   });
@@ -647,11 +647,11 @@ app.frame("/summary", (c) => {
         {state.ucs?.map((uc) => (
           <div style={{ display: "flex" }}>
             <img
-              width="96"
+              width="85"
               style={{
                 border: roundTest(uc.m),
                 padding: "10px",
-                width: "96px",
+                width: "86px",
                 borderRadius: "50%",
                 backgroundColor: bgColor,
               }}
@@ -1175,16 +1175,23 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     ) : (
       `10px solid ${regionColor.west}`
     );
-  } else if (matchNum === 61) {
+  } else if (matchNum === 61 || matchNum === 62) {
     if (i === "progress") {
       return regionColor.final_four;
     }
     return i ? (
-      <p style={{ fontSize: "3.5rem", color: regionColor.final_four }}>
+      <p
+        style={{
+          fontSize: "3.5rem",
+          color: regionColor.final_four,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         Final Four
       </p>
     ) : (
-      "10px solid yellow"
+      `10px solid ${regionColor.final}`
     );
   } else if (matchNum === 62) {
     if (i === "progress") {
