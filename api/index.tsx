@@ -366,7 +366,7 @@ app.frame("/", async (c) => {
             fontSize: "2rem",
           }}
         >
-          Follow our Warpcast channel to be eligible to win the prize.
+          Follow /marchmadness to be eligible to win the prize.
         </p>
       </div>
     ),
@@ -472,7 +472,7 @@ app.frame("/tournament", async (c) => {
               fontSize: 30,
             }}
           >
-            Follow our Warpcast channel to be eligible to win a prize.
+            Follow /marchmadness to be eligible to win a prize.
           </p>
         </div>
       ),
