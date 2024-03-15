@@ -321,22 +321,26 @@ export const app = new Frog<{ State: State }>({
   initialState: initializeTournamentState(),
 });
 app.frame("/", async (c) => {
-  const { previousState, frameData } = c;
+  const { previousState, frameData, verified } = c;
+
   let followData;
 
   // Vérifiez si isFollowing est false ET si frameData.fid est défini
-  if (frameData?.fid) {
-    const options = {
-      headers: { accept: "application/json", api_key: "NEYNAR_API_DOCS" },
-    };
 
-    await axios
-      .get(
-        "https://api.neynar.com/v2/farcaster/channel/followers?id=framemadness&limit=1000",
-        options
-      )
-      .then((response) => (followData = response.data))
-      .catch((err) => console.error(err));
+  if (verified) {
+    if (frameData?.fid) {
+      const options = {
+        headers: { accept: "application/json", api_key: "NEYNAR_API_DOCS" },
+      };
+
+      await axios
+        .get(
+          "https://api.neynar.com/v2/farcaster/channel/followers?id=framemadness&limit=1000",
+          options
+        )
+        .then((response) => (followData = response.data))
+        .catch((err) => console.error(err));
+    }
   }
 
   //@ts-ignore
@@ -409,42 +413,42 @@ app.frame("/tournament", async (c) => {
   //@ts-ignore
   const state = deriveState((previousState) => {
     if (verified) {
-    if (buttonValue === "reset") {
-      return initializeTournamentState();
-    }
-    if (buttonValue === "summary") {
-      return { ...previousState, showSummary: !previousState.showSummary };
-    }
+      if (buttonValue === "reset") {
+        return initializeTournamentState();
+      }
+      if (buttonValue === "summary") {
+        return { ...previousState, showSummary: !previousState.showSummary };
+      }
 
-    if (buttonValue && buttonValue.startsWith("select-")) {
-      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-      const isWinner =
-        previousState.ps[previousState.cmi] === selectedIndex ||
-        previousState.ps[previousState.cmi + 1] === selectedIndex;
+      if (buttonValue && buttonValue.startsWith("select-")) {
+        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+        const isWinner =
+          previousState.ps[previousState.cmi] === selectedIndex ||
+          previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-      if (isWinner) {
-        const winnerIndex = selectedIndex;
-        previousState.nr.push(winnerIndex);
+        if (isWinner) {
+          const winnerIndex = selectedIndex;
+          previousState.nr.push(winnerIndex);
 
-        if (!previousState.ucs) previousState.ucs = [];
-        previousState.ucs.push({
-          m: previousState.mn,
-          w: winnerIndex,
-        });
+          if (!previousState.ucs) previousState.ucs = [];
+          previousState.ucs.push({
+            m: previousState.mn,
+            w: winnerIndex,
+          });
 
-        previousState.mn++;
+          previousState.mn++;
 
-        if (previousState.cmi + 2 < previousState.ps.length) {
-          previousState.cmi += 2;
-        } else {
-          if (previousState.nr.length === 1) {
-            previousState.ps = [previousState.nr[0]];
+          if (previousState.cmi + 2 < previousState.ps.length) {
+            previousState.cmi += 2;
           } else {
-            previousState.ps = [...previousState.nr];
-            previousState.nr = [];
-            previousState.cmi = 0;
+            if (previousState.nr.length === 1) {
+              previousState.ps = [previousState.nr[0]];
+            } else {
+              previousState.ps = [...previousState.nr];
+              previousState.nr = [];
+              previousState.cmi = 0;
+            }
           }
-        }
         }
       }
     }
