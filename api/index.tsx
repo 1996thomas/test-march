@@ -300,7 +300,7 @@ type State = {
 };
 
 function initializeTournamentState(): State {
-  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
