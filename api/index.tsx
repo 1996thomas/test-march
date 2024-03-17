@@ -300,7 +300,7 @@ type State = {
 };
 
 function initializeTournamentState(): State {
-  let ps = Array.from({ length: 64 }, (_, index) => index + 1);
+  let ps = Array.from({ length: 8 }, (_, index) => index + 1);
   return {
     ps,
     cmi: 0,
@@ -366,7 +366,7 @@ app.frame("/", async (c) => {
             fontSize: "2rem",
           }}
         >
-          Follow our Warpcast channel to be eligible to win the prize.
+          Follow /marchmadness to be eligible to win the prize.
         </p>
       </div>
     ),
@@ -472,7 +472,7 @@ app.frame("/tournament", async (c) => {
               fontSize: 30,
             }}
           >
-            Follow our Warpcast channel to be eligible to win a prize.
+            Follow /marchmadness to be eligible to win the prize.
           </p>
         </div>
       ),
@@ -558,16 +558,15 @@ app.frame("/tournament", async (c) => {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                borderRadius: "1rem",
                 flexDirection: "column",
-                fontSize: "1.8rem",
                 textAlign: "center",
                 margin: "0 auto",
                 width: "40%",
                 position: "absolute",
-                top: "35%",
+                top: "40%",
                 left: "50%",
                 transform: "translate(-50%, 0%)",
+                fontSize: "3rem",
               }}
             >
               {roundTest(state.mn, "tournamentStatus")}
@@ -629,12 +628,15 @@ app.frame("/summary", (c) => {
         style={{
           display: "flex",
           gap: "1rem",
-          padding: "1rem",
           flexWrap: "wrap",
           width: "100%",
+          alignItems: "center",
+          margin: "0 auto",
+          justifyContent: "center",
+          paddingTop: "1rem",
         }}
       >
-        <img
+        {/* <img
           src="/background.png"
           width={1200}
           style={{
@@ -643,7 +645,18 @@ app.frame("/summary", (c) => {
             left: 0,
           }}
           alt=""
-        />
+        /> */}
+        <p
+          style={{
+            color: primaryColor,
+            fontSize: "3rem",
+            marginRight: "5rem",
+            justifyContent: "center",
+            lineHeight: ".2",
+          }}
+        >
+          Summary
+        </p>
         {state.ucs?.map((uc) => (
           <div style={{ display: "flex" }}>
             <img
@@ -692,13 +705,51 @@ app.frame("/finish", async (c) => {
     } catch (error) {
       return c.res({
         image: (
-          <div style={{ display: "flex" }}>
-            <p style={{ color: "white", fontSize: "2rem" }}>
-              Error while posting data on Pinata, try later
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              position: "relative",
+              width: "100%",
+              height: "100%",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "2rem",
+            }}
+          >
+            <img
+              src="/background.png"
+              width={1200}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+              alt=""
+            />
+            <p
+              style={{
+                color: primaryColor,
+                textAlign: "center",
+                fontSize: "4rem",
+              }}
+            >
+              Dang!! 😌
+            </p>
+
+            <p
+              style={{
+                color: white,
+                textAlign: "center",
+                fontSize: "2.3rem",
+              }}
+            >
+              Everyone loves us so much that they broke the frame. There are too
+              many players online at the same time; please try again later.
             </p>
           </div>
         ),
-        intents: <Button action="/finish">Retry</Button>,
+        intents: [<Button action="/finish">Retry</Button>],
       });
     }
   }
@@ -731,7 +782,6 @@ app.frame("/finish", async (c) => {
           },
         }
       );
-      console.log("Réponse POST :", postResponse.data);
     } catch (error) {
       return c.res({
         image: (
@@ -742,6 +792,9 @@ app.frame("/finish", async (c) => {
               position: "relative",
               width: "100%",
               height: "100%",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "2rem",
             }}
           >
             <img
@@ -754,12 +807,29 @@ app.frame("/finish", async (c) => {
               }}
               alt=""
             />
-            <p style={{ color: regionColor.midwest, fontSize: "3rem" }}>
-              Error while posting data on Pinata, try later
+            <p
+              style={{
+                color: primaryColor,
+                textAlign: "center",
+                fontSize: "4rem",
+              }}
+            >
+              Dang!! 😌
+            </p>
+
+            <p
+              style={{
+                color: white,
+                textAlign: "center",
+                fontSize: "2.3rem",
+              }}
+            >
+              Everyone loves us so much that they broke the frame. There are too
+              many players online at the same time; please try again later.
             </p>
           </div>
         ),
-        intents: [<Button action="/finish">🔁 Retry 🔁</Button>],
+        intents: [<Button action="/finish">Retry</Button>],
       });
     }
   }
@@ -770,46 +840,6 @@ app.frame("/finish", async (c) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
-          height: "100%",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src="/background.png"
-          width={1200}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}
-          alt=""
-        />
-        <p style={{ fontSize: "4rem", color: primaryColor }}>
-          Mint Your Bracket on Base
-        </p>
-        <p style={{ color: white, fontSize: "2rem" }}>
-          Don't forget to mint your official participation NFT !
-        </p>
-      </div>
-    ),
-    intents: [
-      <Button>Mint</Button>,
-      <Button action="/continue">Continue</Button>,
-    ],
-  });
-});
-
-app.frame("/continue", (c) => {
-  return c.res({
-    image: (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
           height: "100%",
           width: "100%",
           justifyContent: "center",
@@ -832,15 +862,132 @@ app.frame("/continue", (c) => {
         <p
           style={{
             color: white,
-            fontSize: "2rem",
+            fontSize: "1.8rem",
             textAlign: "center",
-            width: "80%",
           }}
         >
-          Your bracket has been submitted. Follow all the action on our channel
-          and your position on the leaderboard.
+          Your bracket was submitted, and the prizes are:
         </p>
-        <p style={{ color: white, fontSize: "2rem", textAlign: "center" }}>
+
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center",
+            margin: 0,
+          }}
+        >
+          🥇 1st place - USDC
+          <img
+            src="/usdc.png"
+            width={36}
+            height={36}
+            alt=""
+            style={{ marginRight: ".2rem", marginLeft: "1rem" }}
+          />
+          400{" "}
+        </p>
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center",
+            margin: 0,
+          }}
+        >
+          🥈 2nd place - USDC
+          <img
+            src="/usdc.png"
+            width={36}
+            height={36}
+            alt=""
+            style={{ marginRight: ".2rem", marginLeft: "1rem" }}
+          />
+          200
+        </p>
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center",
+            margin: 0,
+          }}
+        >
+          🥉 3nd place - USDC
+          <img
+            src="/usdc.png"
+            width={36}
+            height={36}
+            alt=""
+            style={{ marginRight: ".2rem", marginLeft: "1rem" }}
+          />
+          100
+        </p>
+
+        <p style={{ color: white, fontSize: "1.8rem", textAlign: "center" }}>
+          4th to 10th place - USDC $8.99 (to mint a Beam Name)
+        </p>
+        <p style={{ color: white, fontSize: "1.8rem", textAlign: "center" }}>
+          All other participants - 10 Warps
+        </p>
+      </div>
+    ),
+    intents: [<Button action="/continue">Continue</Button>],
+  });
+});
+
+app.frame("/continue", (c) => {
+  return c.res({
+    image: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
+        <p style={{ fontSize: "4rem", color: primaryColor }}>Thank you</p>
+
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center",
+            width: "90%",
+          }}
+        >
+          Your NFT will be dropped when submissions close. Look for updates and
+          follow our channel to be eligible to win the prize.
+        </p>
+        <p
+          style={{
+            alignText: "center",
+            color: white,
+            fontSize: 30,
+          }}
+        >
+          You can follow your position on the leaderboard.
+        </p>
+        <p
+          style={{
+            alignText: "center",
+            color: white,
+            fontSize: 30,
+          }}
+        >
           Good luck!
         </p>
       </div>
@@ -864,13 +1011,30 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+        <p
+          style={{
+            fontSize: "3.5rem",
+            color: regionColor.south,
+            margin: 0,
+          }}
+        >
           South Region
         </p>
-        <p style={{ color: white }}>First round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.south}`
+      `4px solid ${regionColor.south}`
     );
   } else if (matchNum <= 16) {
     if (i === "progress") {
@@ -884,13 +1048,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
           East Region
         </p>
-        <p style={{ color: white }}>First round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.east}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum <= 24) {
     if (i === "progress") {
@@ -904,13 +1079,26 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+        <p
+          style={{ fontSize: "3.5rem", color: regionColor.midwest, margin: 0 }}
+        >
           Midwest Region
         </p>
-        <p style={{ color: white }}>First round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.midwest}`
+      `4px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 32) {
     if (i === "progress") {
@@ -927,13 +1115,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white }}>First round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
       </div>
     ) : (
-      `8px solid ${regionColor.west}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum <= 36) {
     if (i === "progress") {
@@ -947,13 +1146,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
           South Region
         </p>
-        <p style={{ color: white }}>Second round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.south}`
+      `4px solid ${regionColor.south}`
     );
   } else if (matchNum <= 40) {
     if (i === "progress") {
@@ -967,13 +1177,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
           East Region
         </p>
-        <p style={{ color: white }}>Second round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.east}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum <= 44) {
     if (i === "progress") {
@@ -987,13 +1208,26 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+        <p
+          style={{ fontSize: "3.5rem", color: regionColor.midwest, margin: 0 }}
+        >
           Midwest Region
         </p>
-        <p style={{ color: white }}>Second round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.midwest}`
+      `4px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 48) {
     if (i === "progress") {
@@ -1007,13 +1241,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white }}>Second round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
       </div>
     ) : (
-      `8px solid ${regionColor.west}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum <= 50) {
     if (i === "progress") {
@@ -1027,13 +1272,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
           South Region
         </p>
-        <p style={{ color: white }}>Sweet 16</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16 </p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.south}`
+      `4px solid ${regionColor.south}`
     );
   } else if (matchNum <= 52) {
     if (i === "progress") {
@@ -1047,13 +1303,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
           East Region
         </p>
-        <p style={{ color: white }}>Sweet 16</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `8px solid ${regionColor.east}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum <= 54) {
     if (i === "progress") {
@@ -1067,13 +1334,26 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+        <p
+          style={{ fontSize: "3.5rem", color: regionColor.midwest, margin: 0 }}
+        >
           Midwest Region
         </p>
-        <p style={{ color: white }}>Sweet 16</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
       </div>
     ) : (
-      `8px solid ${regionColor.midwest}`
+      `4px solid ${regionColor.midwest}`
     );
   } else if (matchNum <= 56) {
     if (i === "progress") {
@@ -1087,13 +1367,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white }}>Sweet 16</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
       </div>
     ) : (
-      `8px solid ${regionColor.west}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum === 57) {
     if (i === "progress") {
@@ -1107,13 +1398,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.south }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
           South Region
         </p>
-        <p style={{ color: white }}>Elite Eight</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `10px solid ${regionColor.south}`
+      `4px solid ${regionColor.south}`
     );
   } else if (matchNum === 58) {
     if (i === "progress") {
@@ -1127,13 +1429,24 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
           East Region
         </p>
-        <p style={{ color: white }}>Elite Eight</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
       </div>
     ) : (
-      `10px solid ${regionColor.east}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum === 59) {
     if (i === "progress") {
@@ -1147,13 +1460,26 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.midwest }}>
+        <p
+          style={{ fontSize: "3.5rem", color: regionColor.midwest, margin: 0 }}
+        >
           Midwest Region
         </p>
-        <p style={{ color: white }}>Elite Eight</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `10px solid ${regionColor.midwest}`
+      `4px solid ${regionColor.midwest}`
     );
   } else if (matchNum === 60) {
     if (i === "progress") {
@@ -1167,53 +1493,121 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west }}>
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white }}>Elite Eight</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
       </div>
     ) : (
-      `10px solid ${regionColor.west}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum === 61 || matchNum === 62) {
     if (i === "progress") {
       return regionColor.final_four;
     }
     return i ? (
-      <p
+      <div
         style={{
-          fontSize: "3.5rem",
-          color: regionColor.final_four,
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        Final Four
-      </p>
+        <p
+          style={{
+            fontSize: "3.5rem",
+            color: regionColor.final_four,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          Final Four
+        </p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
     ) : (
-      `10px solid ${regionColor.final}`
+      `4px solid ${regionColor.final}`
     );
   } else if (matchNum === 62) {
     if (i === "progress") {
       return regionColor.final_four;
     }
     return i ? (
-      <p style={{ fontSize: "3.5rem", color: regionColor.final_four }}>
-        Final Four
-      </p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.final_four }}>
+          Final Four
+        </p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
     ) : (
-      "10px solid yellow"
+      `4px solid ${primaryColor}`
     );
   } else if (matchNum === 63) {
     if (i === "progress") {
       return regionColor.final;
     }
     return i ? (
-      <p style={{ fontSize: "3.5rem", color: regionColor.final }}>
-        NCAA championship
-      </p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.final }}>
+          Championship
+        </p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
     ) : (
-      "10px solid yellow"
+      `4px solid ${primaryColor}`
     );
   } else {
     return ""; // Retour par défaut pour tout numéro de match non géré
