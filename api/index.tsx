@@ -7,260 +7,261 @@ dotenv.config();
 const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1255&width=100",
-    name: "Alabama Crimson Tide",
+    "logo": "https://i.imgur.com/AaWuRSx.png",
+    "name": "Connecticut Huskies"
   },
   "2": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1164&width=100",
-    name: "Texas A&M-CC Islanders",
+    logo: "https://i.imgur.com/2elhHTg.png",
+    name: "Stetson Hatters",
   },
   "3": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1061&width=100",
-    name: "Maryland Terrapins",
+    logo: "https://i.imgur.com/qvftkkT.png",
+    name: "Florida Atlantic Owls",
   },
   "4": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=380&width=100",
-    name: "West Virginia Mountaineers",
+    logo: "https://i.imgur.com/YnoyzNj.png",
+    name: "Northwestern Wildcats",
   },
   "5": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1234&width=100",
+    logo: "https://i.imgur.com/2iw9WdQ.png",
     name: "San Diego State Aztecs",
   },
   "6": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1309&width=100",
-    name: "Charleston Cougars",
+    logo: "https://i.imgur.com/rMFmHwH.png",
+    name: "UAB Blazers",
   },
   "7": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=307&width=100",
-    name: "Virginia Cavaliers",
+    logo: "https://i.imgur.com/laQuBxG.png",
+    name: "Auburn Tigers",
   },
   "8": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1312&width=100",
-    name: "Furman Paladins",
+    logo: "https://i.imgur.com/8FuABk5.png",
+    name: "Yale Bulldogs",
   },
   "9": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1220&width=100",
-    name: "Creighton Bluejays",
+    logo: "https://i.imgur.com/5GnGTAG.png",
+    name: "Brigham Young Cougars",
   },
   "10": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1063&width=100",
-    name: "North Carolina State Wolfpack",
+    logo: "https://i.imgur.com/q3KiO5n.png",
+    name: "Duquesne Dukes",
   },
   "11": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1075&width=100",
-    name: "Baylor Bears",
+    logo: "https://i.imgur.com/xjzHJ8n.png",
+    name: "Illinois Fighting Illini",
   },
+
   "12": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1132&width=100",
-    name: "UC Santa Barbara Gauchos",
+    logo: "https://i.imgur.com/tUwuD0y.png",
+    name: "Morehead State Eagles",
   },
   "13": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1079&width=100",
-    name: "Missouri Tigers",
+    logo: "https://i.imgur.com/0L3D4dn.png",
+    name: "Washington State Cougars",
   },
   "14": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1336&width=100",
-    name: "Utah State Aggies",
+    logo: "https://i.imgur.com/qFjv2iU.png",
+    name: "Drake Bulldogs",
   },
   "15": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1297&width=100",
-    name: "Arizona Wildcats",
+    logo: "https://i.imgur.com/W4WAai6.png",
+    name: "Iowa State Cyclones",
   },
   "16": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1174&width=100",
-    name: "Princeton Tigers",
+    logo: "https://i.imgur.com/Wnpq2bd.png",
+    name: "South Dakota State Jackrabbits",
   },
   "17": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1122&width=100",
-    name: "Purdue Boilermakers",
+    logo: "https://i.imgur.com/nnUzmbf.png",
+    name: "North Carolina Tar Heels",
   },
   "18": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1237&width=100",
-    name: "Fairleigh Dickinson Knights",
+    logo: "https://i.imgur.com/CiWOp5o.png",
+    name: " Howard/Wagner",
   },
   "19": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1348&width=100",
-    name: "Memphis Tigers",
+    logo: "https://i.imgur.com/tTTDGUF.png",
+    name: "Mississippi State Bulldogs",
   },
   "20": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=329&width=100",
-    name: "Florida Atlantic Owls",
-  },
-  "21": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1060&width=100",
-    name: "Duke Blue Devils",
-  },
-  "22": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1213&width=100",
-    name: "Oral Roberts Golden Eagles",
-  },
-  "23": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1264&width=100",
-    name: "Tennessee Volunteers",
-  },
-  "24": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1268&width=100",
-    name: "Louisiana-Lafayette Ragin' Cajuns",
-  },
-  "25": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1259&width=100",
-    name: "Kentucky Wildcats",
-  },
-  "26": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1110&width=100",
-    name: "Providence Friars",
-  },
-  "27": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1078&width=100",
-    name: "Kansas State Wildcats",
-  },
-  "28": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1089&width=100",
-    name: "Montana State Fighting Bobcats",
-  },
-  "29": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1118&width=100",
+    logo: "https://i.imgur.com/Y1eVaKN.png",
     name: "Michigan State Spartans",
   },
+  "21": {
+    logo: "https://i.imgur.com/sW9GzGZ.png",
+    name: "Saint Mary's Gaels",
+  },
+  "22": {
+    logo: "https://i.imgur.com/x1BwyZT.png",
+    name: "Grand Canyon Antelopes",
+  },
+  "23": {
+    logo: "https://i.imgur.com/O9m6BkD.png",
+    name: "Alabama Crimson Tide",
+  },
+  "24": {
+    logo: "https://i.imgur.com/el6hdti.png",
+    name: "Charleston Cougars",
+  },
+  "25": {
+    logo: "https://i.imgur.com/9iQJ4ky.png",
+    name: "Clemson Tigers",
+  },
+  "26": {
+    logo: "https://i.imgur.com/KSPl040.png",
+    name: "New Mexico Lobos",
+  },
+  "27": {
+    logo: "https://i.imgur.com/GMAyg6x.png",
+    name: "Baylor Bears",
+  },
+  "28": {
+    logo: "https://i.imgur.com/mxrmsXR.png",
+    name: "Colgate Raiders",
+  },
+  "29": {
+    logo: "https://i.imgur.com/sME409i.png",
+    name: "Dayton Flyers",
+  },
   "30": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1304&width=100",
-    name: "USC Trojans",
+    logo: "https://i.imgur.com/3Fgj3z1.png",
+    name: "Nevada Wolf Pack",
   },
   "31": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1107&width=100",
-    name: "Marquette Golden Eagles",
+    logo: "https://i.imgur.com/USa3vO5.png",
+    name: "Arizona Wildcats",
   },
   "32": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=316&width=100",
-    name: "Vermont Catamounts",
+    logo: "https://i.imgur.com/PBEY4za.png",
+    name: "Long Beach State 49ers",
   },
   "33": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1485&width=100",
+    logo: "https://i.imgur.com/VrAQwnf.png",
     name: "Houston Cougars",
   },
   "34": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1473&width=100",
-    name: "Northern Kentucky Norse",
+    logo: "https://i.imgur.com/ncYb1kX.png",
+    name: "Longwood Lancers",
   },
   "35": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1116&width=100",
-    name: "Iowa Hawkeyes",
+    logo: "https://i.imgur.com/NiMWSx7.png",
+    name: "Nebraska Cornhuskers",
   },
   "36": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1257&width=100",
-    name: "Auburn Tigers",
-  },
-  "37": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1062&width=100",
-    name: "Miami (FL) Hurricanes",
-  },
-  "38": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1221&width=100",
-    name: "Drake Bulldogs",
-  },
-  "39": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1350&width=100",
-    name: "Indiana Hoosiers",
-  },
-  "40": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1191&width=100",
-    name: "Kent State Golden Flashes",
-  },
-  "41": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1077&width=100",
-    name: "Iowa State Cyclones",
-  },
-  "42": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1109&width=100",
-    name: "Pittsburgh Panthers",
-  },
-  "43": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=325&width=100",
-    name: "Xavier Musketeers",
-  },
-  "44": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1515&width=100",
-    name: "Kennesaw State Owls",
-  },
-  "45": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1084&width=100",
+    logo: "https://i.imgur.com/eISs94F.png",
     name: "Texas A&M Aggies",
   },
+  "37": {
+    logo: "https://i.imgur.com/FQPP91L.png",
+    name: "Wisconsin Badgers",
+  },
+  "38": {
+    logo: "https://i.imgur.com/n3vuFdu.png",
+    name: "James Madison Dukes",
+  },
+  "39": {
+    logo: "https://i.imgur.com/jU7ZSbY.png",
+    name: "Duke Blue Devils",
+  },
+  "40": {
+    logo: "https://i.imgur.com/cmwVrMx.png",
+    name: "Vermont Catamounts",
+  },
+  "41": {
+    logo: "https://i.imgur.com/MBYLfc3.png",
+    name: "Texas Tech Red Raiders",
+  },
+  "42": {
+    logo: "https://i.imgur.com/eJE9A2E.png",
+    name: "North Carolina State Wolfpack",
+  },
+  "43": {
+    logo: "https://i.imgur.com/mt5FKBs.png",
+    name: "Kentucky Wildcats",
+  },
+  "44": {
+    logo: "https://i.imgur.com/mblaZeT.png",
+    name: "Oakland Golden Grizzlies",
+  },
+  "45": {
+    logo: "https://i.imgur.com/ipRyyl7.png",
+    name: "Florida Gators",
+  },
   "46": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1121&width=100",
-    name: "Penn State Nittany Lions",
+    logo: "https://i.imgur.com/7tgBbkI.png",
+    name: "Colorado/Boise St",
   },
   "47": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1083&width=100",
-    name: "Texas Longhorns",
+    logo: "https://i.imgur.com/lrfc29Y.png",
+    name: "Marquette Golden Eagles",
   },
   "48": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1250&width=100",
-    name: "Colgate Raiders",
+    logo: "https://i.imgur.com/imttUFw.png",
+    name: "Western Kentucky Hilltoppers",
   },
   "49": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=400&width=100",
-    name: "Kansas Jayhawks",
+    logo: "https://i.imgur.com/w8GzP2h.png",
+    name: "Purdue Boilermakers",
   },
   "50": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1202&width=100",
-    name: "Howard Bison",
+    logo: "https://i.imgur.com/ygGg7Bq.png",
+    name: "Grambling/Montana St",
   },
   "51": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1256&width=100",
-    name: "Arkansas Razorbacks",
+    logo: "https://i.imgur.com/RJ31oCJ.png",
+    name: "Utah State Aggies",
   },
   "52": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1115&width=100",
-    name: "Illinois Fighting Illini",
-  },
-  "53": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1342&width=100",
-    name: "Saint Mary's Gaels",
-  },
-  "54": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1142&width=100",
-    name: "VCU Rams",
-  },
-  "55": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1102&width=100",
-    name: "Connecticut Huskies",
-  },
-  "56": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1178&width=100",
-    name: "Iona Gaels",
-  },
-  "57": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1235&width=100",
+    logo: "https://i.imgur.com/EkAdooE.png",
     name: "TCU Horned Frogs",
   },
-  "58": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1298&width=100",
-    name: "Arizona State Sun Devils",
-  },
-  "59": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=417&width=100",
+  "53": {
+    logo: "https://i.imgur.com/jldR4Sk.png",
     name: "Gonzaga Bulldogs",
   },
+  "54": {
+    logo: "https://i.imgur.com/MlcgTsh.png",
+    name: "Mcneese State Cowboys",
+  },
+  "55": {
+    logo: "https://i.imgur.com/RRsEmaz.png",
+    name: "Kansas Jayhawks",
+  },
+  "56": {
+    logo: "https://i.imgur.com/Bt65YWh.png",
+    name: "Samford Bulldogs",
+  },
+  "57": {
+    logo: "https://i.imgur.com/QWWnLvb.png",
+    name: "South Carolina Gamecocks",
+  },
+  "58": {
+    logo: "https://i.imgur.com/TbrHh2c.png",
+    name: "Oregon Ducks",
+  },
+  "59": {
+    logo: "https://i.imgur.com/LXSh4Rk.png",
+    name: "Creighton Bluejays",
+  },
   "60": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=13667&width=100",
-    name: "Grand Canyon Antelopes",
+    logo: "https://i.imgur.com/2Xnm7rD.png",
+    name: "Akron Zips",
   },
   "61": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1119&width=100",
-    name: "Northwestern Wildcats",
+    logo: "https://i.imgur.com/OdnJotY.png",
+    name: "Texas Longhorns",
   },
   "62": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1328&width=100",
-    name: "Boise State Broncos",
+    logo: "https://i.imgur.com/1WFSzTL.png",
+    name: "Colorodo St/Virginia",
   },
   "63": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1303&width=100",
-    name: "UCLA Bruins",
+    logo: "https://i.imgur.com/WnahBAT.png",
+    name: "Tennessee Volunteers",
   },
   "64": {
-    logo: "https://www.proballers.com/api/getTeamLogo?id=1097&width=100",
-    name: "UNC Asheville Bulldogs",
+    logo: "https://i.imgur.com/xeQhx9l.png",
+    name: "Saint Peter's Peacocks",
   },
 };
 
@@ -634,7 +635,7 @@ app.frame("/summary", (c) => {
           margin: "0 auto",
           justifyContent: "flex-start",
           paddingTop: "1rem",
-          paddingLeft:'1rem'
+          paddingLeft: "1rem",
         }}
       >
         <img
@@ -993,7 +994,9 @@ app.frame("/continue", (c) => {
       </div>
     ),
     intents: [
-      <Button.Link href="https://framemadness.vercel.app">Leaderboard</Button.Link>,
+      <Button.Link href="https://framemadness.vercel.app">
+        Leaderboard
+      </Button.Link>,
     ],
   });
 });
@@ -1001,7 +1004,7 @@ app.frame("/continue", (c) => {
 function roundTest(matchNum: number, i?: string): JSX.Element | string {
   if (matchNum <= 8) {
     if (i === "progress") {
-      return regionColor.south;
+      return regionColor.east;
     }
     return i ? (
       <div
@@ -1014,11 +1017,11 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         <p
           style={{
             fontSize: "3.5rem",
-            color: regionColor.south,
+            color: regionColor.east,
             margin: 0,
           }}
         >
-          South Region
+          East Region
         </p>
         <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
         <p
@@ -1034,11 +1037,11 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         </p>
       </div>
     ) : (
-      `4px solid ${regionColor.south}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum <= 16) {
     if (i === "progress") {
-      return regionColor.east;
+      return regionColor.west;
     }
     return i ? (
       <div
@@ -1048,8 +1051,8 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
-          East Region
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
+          West Region
         </p>
         <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
         <p
@@ -1065,9 +1068,43 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         </p>
       </div>
     ) : (
-      `4px solid ${regionColor.east}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum <= 24) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
+    return i ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
+          South Region
+        </p>
+        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
+    ) : (
+      `4px solid ${regionColor.south}`
+    );
+  } else if (matchNum <= 32) {
+    if (i === "progress") {
+      return regionColor.midwest;
+    }
     if (i === "progress") {
       return regionColor.midwest;
     }
@@ -1095,15 +1132,43 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           }}
         >
           Match {matchNum} of 63
-        </p>
+        </p>{" "}
       </div>
     ) : (
       `4px solid ${regionColor.midwest}`
     );
-  } else if (matchNum <= 32) {
+  } else if (matchNum <= 36) {
     if (i === "progress") {
-      return regionColor.west;
+      return regionColor.east;
     }
+    return i ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
+          East Region
+        </p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
+    ) : (
+      `4px solid ${regionColor.east}`
+    );
+  } else if (matchNum <= 40) {
     if (i === "progress") {
       return regionColor.west;
     }
@@ -1118,7 +1183,7 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>First round</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
         <p
           style={{
             color: white,
@@ -1129,12 +1194,12 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           }}
         >
           Match {matchNum} of 63
-        </p>{" "}
+        </p>
       </div>
     ) : (
       `4px solid ${regionColor.west}`
     );
-  } else if (matchNum <= 36) {
+  } else if (matchNum <= 44) {
     if (i === "progress") {
       return regionColor.south;
     }
@@ -1165,38 +1230,7 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     ) : (
       `4px solid ${regionColor.south}`
     );
-  } else if (matchNum <= 40) {
-    if (i === "progress") {
-      return regionColor.east;
-    }
-    return i ? (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
-          East Region
-        </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
-        <p
-          style={{
-            color: white,
-            alignSelf: "center",
-            fontSize: "2rem",
-            transform: "translateY(-200%)",
-            marginTop: "3rem",
-          }}
-        >
-          Match {matchNum} of 63
-        </p>
-      </div>
-    ) : (
-      `4px solid ${regionColor.east}`
-    );
-  } else if (matchNum <= 44) {
+  } else if (matchNum <= 48) {
     if (i === "progress") {
       return regionColor.midwest;
     }
@@ -1224,45 +1258,14 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           }}
         >
           Match {matchNum} of 63
-        </p>
+        </p>{" "}
       </div>
     ) : (
       `4px solid ${regionColor.midwest}`
     );
-  } else if (matchNum <= 48) {
-    if (i === "progress") {
-      return regionColor.west;
-    }
-    return i ? (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
-          West Region
-        </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>Second round</p>
-        <p
-          style={{
-            color: white,
-            alignSelf: "center",
-            fontSize: "2rem",
-            transform: "translateY(-200%)",
-            marginTop: "3rem",
-          }}
-        >
-          Match {matchNum} of 63
-        </p>{" "}
-      </div>
-    ) : (
-      `4px solid ${regionColor.west}`
-    );
   } else if (matchNum <= 50) {
     if (i === "progress") {
-      return regionColor.south;
+      return regionColor.east;
     }
     return i ? (
       <div
@@ -1272,8 +1275,8 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
-          South Region
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
+          East Region
         </p>
         <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16 </p>
         <p
@@ -1289,11 +1292,11 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         </p>
       </div>
     ) : (
-      `4px solid ${regionColor.south}`
+      `4px solid ${regionColor.east}`
     );
   } else if (matchNum <= 52) {
     if (i === "progress") {
-      return regionColor.east;
+      return regionColor.west;
     }
     return i ? (
       <div
@@ -1303,8 +1306,8 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           alignItems: "center",
         }}
       >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
-          East Region
+        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
+          West Region
         </p>
         <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
         <p
@@ -1320,9 +1323,40 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         </p>
       </div>
     ) : (
-      `4px solid ${regionColor.east}`
+      `4px solid ${regionColor.west}`
     );
   } else if (matchNum <= 54) {
+    if (i === "progress") {
+      return regionColor.south;
+    }
+    return i ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.south, margin: 0 }}>
+          South Region
+        </p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>{" "}
+      </div>
+    ) : (
+      `4px solid ${regionColor.south}`
+    );
+  } else if (matchNum <= 56) {
     if (i === "progress") {
       return regionColor.midwest;
     }
@@ -1355,7 +1389,38 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     ) : (
       `4px solid ${regionColor.midwest}`
     );
-  } else if (matchNum <= 56) {
+  } else if (matchNum === 57) {
+    if (i === "progress") {
+      return regionColor.east;
+    }
+    return i ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
+          East Region
+        </p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
+        <p
+          style={{
+            color: white,
+            alignSelf: "center",
+            fontSize: "2rem",
+            transform: "translateY(-200%)",
+            marginTop: "3rem",
+          }}
+        >
+          Match {matchNum} of 63
+        </p>
+      </div>
+    ) : (
+      `4px solid ${regionColor.east}`
+    );
+  } else if (matchNum === 58) {
     if (i === "progress") {
       return regionColor.west;
     }
@@ -1370,7 +1435,7 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
         <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
           West Region
         </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>Sweet 16</p>
+        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
         <p
           style={{
             color: white,
@@ -1381,12 +1446,12 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
           }}
         >
           Match {matchNum} of 63
-        </p>{" "}
+        </p>
       </div>
     ) : (
       `4px solid ${regionColor.west}`
     );
-  } else if (matchNum === 57) {
+  } else if (matchNum === 59) {
     if (i === "progress") {
       return regionColor.south;
     }
@@ -1417,38 +1482,7 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
     ) : (
       `4px solid ${regionColor.south}`
     );
-  } else if (matchNum === 58) {
-    if (i === "progress") {
-      return regionColor.east;
-    }
-    return i ? (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <p style={{ fontSize: "3.5rem", color: regionColor.east, margin: 0 }}>
-          East Region
-        </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
-        <p
-          style={{
-            color: white,
-            alignSelf: "center",
-            fontSize: "2rem",
-            transform: "translateY(-200%)",
-            marginTop: "3rem",
-          }}
-        >
-          Match {matchNum} of 63
-        </p>{" "}
-      </div>
-    ) : (
-      `4px solid ${regionColor.east}`
-    );
-  } else if (matchNum === 59) {
+  } else if (matchNum === 60) {
     if (i === "progress") {
       return regionColor.midwest;
     }
@@ -1480,37 +1514,6 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
       </div>
     ) : (
       `4px solid ${regionColor.midwest}`
-    );
-  } else if (matchNum === 60) {
-    if (i === "progress") {
-      return regionColor.west;
-    }
-    return i ? (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <p style={{ fontSize: "3.5rem", color: regionColor.west, margin: 0 }}>
-          West Region
-        </p>
-        <p style={{ color: white, marginTop: ".5rem" }}>Elite Eight</p>
-        <p
-          style={{
-            color: white,
-            alignSelf: "center",
-            fontSize: "2rem",
-            transform: "translateY(-200%)",
-            marginTop: "3rem",
-          }}
-        >
-          Match {matchNum} of 63
-        </p>
-      </div>
-    ) : (
-      `4px solid ${regionColor.west}`
     );
   } else if (matchNum === 61 || matchNum === 62) {
     if (i === "progress") {

@@ -1,0 +1,259 @@
+{
+    "1": {
+        "logo": "https://www.proballers.com/api/getTeamLogo?id=1102&width=150",
+        "name": "Connecticut Huskies"
+      },
+  "2": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=377&width=150",
+    "name": "Stetson Hatters"
+  },
+  "3": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=329&width=150",
+    "name": "Florida Atlantic Owls"
+  },
+  "4": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1119&width=150",
+    "name": "Northwestern Wildcats"
+  },
+  "5": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1234&width=150",
+    "name": "San Diego State Aztecs"
+  },
+  "6": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1143&width=150",
+    "name": "UAB Blazers"
+  },
+  "7": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1257&width=150",
+    "name": "Auburn Tigers"
+  },
+  "8": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1175&width=150",
+    "name": "Yale Bulldogs"
+  },
+  "9": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1230&width=150",
+    "name": "Brigham Young Cougars"
+  },
+  "10": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=318&width=150",
+    "name": "Duquesne Dukes"
+  },
+  "11": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1115&width=150",
+    "name": "Illinois Fighting Illini"
+  },
+
+  "12": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1290&width=150",
+    "name": "Morehead State Eagles"
+  },
+  "13": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1305&width=150",
+    "name": "Washington State Cougars"
+  },
+  "14": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1221&width=150",
+    "name": "Drake Bulldogs"
+  },
+  "15": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1077&width=150",
+    "name": "Iowa State Cyclones"
+  },
+  "16": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1345&width=150",
+    "name": "South Dakota State Jackrabbits"
+  },
+  "17": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=306&width=150",
+    "name": "North Carolina Tar Heels"
+  },
+  "18": {
+    "logo": "",
+    "name": " Howard/Wagner"
+  },
+  "19": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1262&width=150",
+    "name": "Mississippi State Bulldogs"
+  },
+  "20": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1118&width=150",
+    "name": "Michigan State Spartans"
+  },
+  "21": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1342&width=150",
+    "name": "Saint Mary's Gaels"
+  },
+  "22": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=13667&width=150",
+    "name": "Grand Canyon Antelopes"
+  },
+  "23": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1255&width=150",
+    "name": "Alabama Crimson Tide"
+  },
+  "24": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1309&width=150",
+    "name": "Charleston Cougars"
+  },
+  "25": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=303&width=150",
+    "name": "Clemson Tigers"
+  },
+  "26": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1233&width=150",
+    "name": "New Mexico Lobos"
+  },
+  "27": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1075&width=150",
+    "name": "Baylor Bears"
+  },
+  "28": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1250&width=150",
+    "name": "Colgate Raiders"
+  },
+  "29": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=317&width=150",
+    "name": "Dayton Flyers"
+  },
+  "30": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1333&width=150",
+    "name": "Nevada Wolf Pack"
+  },
+  "31": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1297&width=150",
+    "name": "Arizona Wildcats"
+  },
+  "32": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1129&width=150",
+    "name": "Long Beach State 49ers"
+  },
+  "33": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1485&width=150",
+    "name": "Houston Cougars"
+  },
+  "34": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1161&width=150",
+    "name": "Longwood Lancers"
+  },
+  "35": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1080&width=150",
+    "name": "Nebraska Cornhuskers"
+  },
+  "36": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1084&width=150",
+    "name": "Texas A&M Aggies"
+  },
+  "37": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1123&width=150",
+    "name": "Wisconsin Badgers"
+  },
+  "38": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1139&width=150",
+    "name": "James Madison Dukes"
+  },
+  "39": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1060&width=150",
+    "name": "Duke Blue Devils"
+  },
+  "40": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=316&width=150",
+    "name": "Vermont Catamounts"
+  },
+  "41": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1085&width=150",
+    "name": "Texas Tech Red Raiders"
+  },
+  "42": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1063&width=150",
+    "name": "North Carolina State Wolfpack"
+  },
+  "43": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1259&width=150",
+    "name": "Kentucky Wildcats"
+  },
+  "44": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1212&width=150",
+    "name": "Oakland Golden Grizzlies"
+  },
+  "45": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=856&width=150",
+    "name": "Florida Gators"
+  },
+  "46": {
+    "logo": "",
+    "name": "Colorado/Boise St"
+  },
+  "47": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1107&width=150",
+    "name": "Marquette Golden Eagles"
+  },
+  "48": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1274&width=150",
+    "name": "Western Kentucky Hilltoppers"
+  },
+  "49": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1122&width=150",
+    "name": "Purdue Boilermakers"
+  },
+  "50": {
+    "logo": "",
+    "name": "Grambling/Montana St"
+  },
+  "51": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1336&width=150",
+    "name": "Utah State Aggies"
+  },
+  "52": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1235&width=150",
+    "name": "TCU Horned Frogs"
+  },
+  "53": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=417&width=150",
+    "name": "Gonzaga Bulldogs"
+  },
+  "54": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1319&width=150",
+    "name": "Mcneese State Cowboys"
+  },
+  "55": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=400&width=150",
+    "name": "Kansas Jayhawks"
+  },
+  "56": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1292&width=150",
+    "name": "Samford Bulldogs"
+  },
+  "57": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1263&width=150",
+    "name": "South Carolina Gamecocks"
+  },
+  "58": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1300&width=150",
+    "name": "Oregon Ducks"
+  },
+  "59": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1220&width=150",
+    "name": "Creighton Bluejays"
+  },
+  "60": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1185&width=150",
+    "name": "Akron Zips"
+  },
+  "61": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1083&width=150",
+    "name": "Texas Longhorns"
+  },
+  "62": {
+    "logo": "",
+    "name": "Colorodo St/Virginia"
+  },
+  "63": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1264&width=150",
+    "name": "Tennessee Volunteers"
+  },
+  "64": {
+    "logo": "https://www.proballers.com/api/getTeamLogo?id=1184&width=150",
+    "name": "Saint Peter's Peacocks"
+  }
+}
