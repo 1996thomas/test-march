@@ -315,7 +315,7 @@ export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
   browserLocation: "/",
-  hub: pinata(),
+  // hub: pinata(),
   initialState: initializeTournamentState(),
 });
 app.frame("/", async (c) => {
@@ -384,44 +384,44 @@ app.frame("/tournament", async (c) => {
 
   //@ts-ignore
   const state = deriveState((previousState) => {
-    if (verified) {
-      if (buttonValue === "reset") {
-        return initializeTournamentState();
-      }
-      if (buttonValue === "summary") {
-        return { ...previousState, showSummary: !previousState.showSummary };
-      }
+    // if (verified) {
+    if (buttonValue === "reset") {
+      return initializeTournamentState();
+    }
+    if (buttonValue === "summary") {
+      return { ...previousState, showSummary: !previousState.showSummary };
+    }
 
-      if (buttonValue && buttonValue.startsWith("select-")) {
-        const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
-        const isWinner =
-          previousState.ps[previousState.cmi] === selectedIndex ||
-          previousState.ps[previousState.cmi + 1] === selectedIndex;
+    if (buttonValue && buttonValue.startsWith("select-")) {
+      const selectedIndex = parseInt(buttonValue.split("-")[1], 10);
+      const isWinner =
+        previousState.ps[previousState.cmi] === selectedIndex ||
+        previousState.ps[previousState.cmi + 1] === selectedIndex;
 
-        if (isWinner) {
-          const winnerIndex = selectedIndex;
-          previousState.nr.push(winnerIndex);
+      if (isWinner) {
+        const winnerIndex = selectedIndex;
+        previousState.nr.push(winnerIndex);
 
-          if (!previousState.ucs) previousState.ucs = [];
-          previousState.ucs.push({
-            m: previousState.mn,
-            w: winnerIndex,
-          });
+        if (!previousState.ucs) previousState.ucs = [];
+        previousState.ucs.push({
+          m: previousState.mn,
+          w: winnerIndex,
+        });
 
-          previousState.mn++;
+        previousState.mn++;
 
-          if (previousState.cmi + 2 < previousState.ps.length) {
-            previousState.cmi += 2;
+        if (previousState.cmi + 2 < previousState.ps.length) {
+          previousState.cmi += 2;
+        } else {
+          if (previousState.nr.length === 1) {
+            previousState.ps = [previousState.nr[0]];
           } else {
-            if (previousState.nr.length === 1) {
-              previousState.ps = [previousState.nr[0]];
-            } else {
-              previousState.ps = [...previousState.nr];
-              previousState.nr = [];
-              previousState.cmi = 0;
-            }
+            previousState.ps = [...previousState.nr];
+            previousState.nr = [];
+            previousState.cmi = 0;
           }
         }
+        // }
       }
     }
   });
@@ -632,11 +632,12 @@ app.frame("/summary", (c) => {
           width: "100%",
           alignItems: "center",
           margin: "0 auto",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           paddingTop: "1rem",
+          paddingLeft:'1rem'
         }}
       >
-        {/* <img
+        <img
           src="/background.png"
           width={1200}
           style={{
@@ -645,13 +646,12 @@ app.frame("/summary", (c) => {
             left: 0,
           }}
           alt=""
-        /> */}
+        />
         <p
           style={{
             color: primaryColor,
             fontSize: "3rem",
-            marginRight: "5rem",
-            justifyContent: "center",
+            marginRight: "4.5rem",
             lineHeight: ".2",
           }}
         >
@@ -969,8 +969,8 @@ app.frame("/continue", (c) => {
             width: "90%",
           }}
         >
-          Your NFT will be dropped when submissions close. Look for updates and
-          follow our channel to be eligible to win the prize.
+          Your NFT will be dropped at the end of the competition. Look for
+          updates and follow our channel to be eligible to win the prize.
         </p>
         <p
           style={{
@@ -993,7 +993,7 @@ app.frame("/continue", (c) => {
       </div>
     ),
     intents: [
-      <Button.Link href="https://example.com">Leaderboard</Button.Link>,
+      <Button.Link href="https://framemadness.vercel.app">Leaderboard</Button.Link>,
     ],
   });
 });
