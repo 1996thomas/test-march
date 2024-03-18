@@ -7,260 +7,260 @@ dotenv.config();
 const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
-    "logo": "https://i.imgur.com/AaWuRSx.png",
-    "name": "Connecticut Huskies"
+    logo: "/east/01_uconn.png",
+    name: "Connecticut Huskies",
   },
   "2": {
-    logo: "https://i.imgur.com/2elhHTg.png",
+    logo: "/east/02_stetson.png",
     name: "Stetson Hatters",
   },
   "3": {
-    logo: "https://i.imgur.com/qvftkkT.png",
+    logo: "/east/03_fla-atlantic.png",
     name: "Florida Atlantic Owls",
   },
   "4": {
-    logo: "https://i.imgur.com/YnoyzNj.png",
+    logo: "/east/04_northwestern.png",
     name: "Northwestern Wildcats",
   },
   "5": {
-    logo: "https://i.imgur.com/2iw9WdQ.png",
+    logo: "/east/05_san-diego-st.png",
     name: "San Diego State Aztecs",
   },
   "6": {
-    logo: "https://i.imgur.com/rMFmHwH.png",
+    logo: "/east/06_uab.png",
     name: "UAB Blazers",
   },
   "7": {
-    logo: "https://i.imgur.com/laQuBxG.png",
+    logo: "/east/07_auburn.png",
     name: "Auburn Tigers",
   },
   "8": {
-    logo: "https://i.imgur.com/8FuABk5.png",
+    logo: "/east/08_yale.png",
     name: "Yale Bulldogs",
   },
   "9": {
-    logo: "https://i.imgur.com/5GnGTAG.png",
+    logo: "/east/09_byu.png",
     name: "Brigham Young Cougars",
   },
   "10": {
-    logo: "https://i.imgur.com/q3KiO5n.png",
+    logo: "/east/10_duquesne.png",
     name: "Duquesne Dukes",
   },
   "11": {
-    logo: "https://i.imgur.com/xjzHJ8n.png",
+    logo: "/east/11_illinois.png",
     name: "Illinois Fighting Illini",
   },
 
   "12": {
-    logo: "https://i.imgur.com/tUwuD0y.png",
+    logo: "/east/12_morehead-st.png",
     name: "Morehead State Eagles",
   },
   "13": {
-    logo: "https://i.imgur.com/0L3D4dn.png",
+    logo: "/east/13_washington-st.png",
     name: "Washington State Cougars",
   },
   "14": {
-    logo: "https://i.imgur.com/qFjv2iU.png",
+    logo: "/east/14_drake.png",
     name: "Drake Bulldogs",
   },
   "15": {
-    logo: "https://i.imgur.com/W4WAai6.png",
+    logo: "/east/15_iowa-st.png",
     name: "Iowa State Cyclones",
   },
   "16": {
-    logo: "https://i.imgur.com/Wnpq2bd.png",
+    logo: "/east/16_south-dakota-st.png",
     name: "South Dakota State Jackrabbits",
   },
   "17": {
-    logo: "https://i.imgur.com/nnUzmbf.png",
+    logo: "/west/01_north-carolina.png",
     name: "North Carolina Tar Heels",
   },
   "18": {
-    logo: "https://i.imgur.com/CiWOp5o.png",
+    logo: "/west/02_west_howard_wagner.png",
     name: " Howard/Wagner",
   },
   "19": {
-    logo: "https://i.imgur.com/tTTDGUF.png",
+    logo: "/west/03_mississippi-st.png",
     name: "Mississippi State Bulldogs",
   },
   "20": {
-    logo: "https://i.imgur.com/Y1eVaKN.png",
+    logo: "/west/04_michigan-st.png",
     name: "Michigan State Spartans",
   },
   "21": {
-    logo: "https://i.imgur.com/sW9GzGZ.png",
+    logo: "/west/05_st-marys-ca.png",
     name: "Saint Mary's Gaels",
   },
   "22": {
-    logo: "https://i.imgur.com/x1BwyZT.png",
+    logo: "/west/06_grand-canyon.png",
     name: "Grand Canyon Antelopes",
   },
   "23": {
-    logo: "https://i.imgur.com/O9m6BkD.png",
+    logo: "/west/07_alabama.png",
     name: "Alabama Crimson Tide",
   },
   "24": {
-    logo: "https://i.imgur.com/el6hdti.png",
+    logo: "/west/08_col-of-charleston.png",
     name: "Charleston Cougars",
   },
   "25": {
-    logo: "https://i.imgur.com/9iQJ4ky.png",
+    logo: "/west/09_clemson.png",
     name: "Clemson Tigers",
   },
   "26": {
-    logo: "https://i.imgur.com/KSPl040.png",
+    logo: "/west/10_new-mexico.png",
     name: "New Mexico Lobos",
   },
   "27": {
-    logo: "https://i.imgur.com/GMAyg6x.png",
+    logo: "/west/11_baylor.png",
     name: "Baylor Bears",
   },
   "28": {
-    logo: "https://i.imgur.com/mxrmsXR.png",
+    logo: "/west/12_colgate.png",
     name: "Colgate Raiders",
   },
   "29": {
-    logo: "https://i.imgur.com/sME409i.png",
+    logo: "/west/13_dayton.png",
     name: "Dayton Flyers",
   },
   "30": {
-    logo: "https://i.imgur.com/3Fgj3z1.png",
+    logo: "/west/14_nevada.png",
     name: "Nevada Wolf Pack",
   },
   "31": {
-    logo: "https://i.imgur.com/USa3vO5.png",
+    logo: "/west/15_arizona.png",
     name: "Arizona Wildcats",
   },
   "32": {
-    logo: "https://i.imgur.com/PBEY4za.png",
+    logo: "/west/16_long-beach-st.png",
     name: "Long Beach State 49ers",
   },
   "33": {
-    logo: "https://i.imgur.com/VrAQwnf.png",
+    logo: "/south/01_houston.png",
     name: "Houston Cougars",
   },
   "34": {
-    logo: "https://i.imgur.com/ncYb1kX.png",
+    logo: "/south/02_longwood.png",
     name: "Longwood Lancers",
   },
   "35": {
-    logo: "https://i.imgur.com/NiMWSx7.png",
+    logo: "/south/03_nebraska.png",
     name: "Nebraska Cornhuskers",
   },
   "36": {
-    logo: "https://i.imgur.com/eISs94F.png",
+    logo: "/south/04_texas-am.png",
     name: "Texas A&M Aggies",
   },
   "37": {
-    logo: "https://i.imgur.com/FQPP91L.png",
+    logo: "/south/05_wisconsin.png",
     name: "Wisconsin Badgers",
   },
   "38": {
-    logo: "https://i.imgur.com/n3vuFdu.png",
+    logo: "/south/06_james-madison.png",
     name: "James Madison Dukes",
   },
   "39": {
-    logo: "https://i.imgur.com/jU7ZSbY.png",
+    logo: "/south/07_duke.png",
     name: "Duke Blue Devils",
   },
   "40": {
-    logo: "https://i.imgur.com/cmwVrMx.png",
+    logo: "/south/08_vermont.png",
     name: "Vermont Catamounts",
   },
   "41": {
-    logo: "https://i.imgur.com/MBYLfc3.png",
+    logo: "/south/09_texas-tech.png",
     name: "Texas Tech Red Raiders",
   },
   "42": {
-    logo: "https://i.imgur.com/eJE9A2E.png",
+    logo: "/south/10_north-carolina-st.png",
     name: "North Carolina State Wolfpack",
   },
   "43": {
-    logo: "https://i.imgur.com/mt5FKBs.png",
+    logo: "/south/11_kentucky.png",
     name: "Kentucky Wildcats",
   },
   "44": {
-    logo: "https://i.imgur.com/mblaZeT.png",
+    logo: "/south/12_oakland.png",
     name: "Oakland Golden Grizzlies",
   },
   "45": {
-    logo: "https://i.imgur.com/ipRyyl7.png",
+    logo: "/south/13_florida.png",
     name: "Florida Gators",
   },
   "46": {
-    logo: "https://i.imgur.com/7tgBbkI.png",
+    logo: "/south/14_south_colorado_boise-st.png",
     name: "Colorado/Boise St",
   },
   "47": {
-    logo: "https://i.imgur.com/lrfc29Y.png",
+    logo: "/south/15_marquette.png",
     name: "Marquette Golden Eagles",
   },
   "48": {
-    logo: "https://i.imgur.com/imttUFw.png",
+    logo: "/south/16_western-ky.png",
     name: "Western Kentucky Hilltoppers",
   },
   "49": {
-    logo: "https://i.imgur.com/w8GzP2h.png",
+    logo: "/midwest/01_purdue.png",
     name: "Purdue Boilermakers",
   },
   "50": {
-    logo: "https://i.imgur.com/ygGg7Bq.png",
+    logo: "/midwest/02_midewest_grambling_montana-st.png",
     name: "Grambling/Montana St",
   },
   "51": {
-    logo: "https://i.imgur.com/RJ31oCJ.png",
+    logo: "/midwest/03_utah-st.png",
     name: "Utah State Aggies",
   },
   "52": {
-    logo: "https://i.imgur.com/EkAdooE.png",
+    logo: "/midwest/04_tcu.png",
     name: "TCU Horned Frogs",
   },
   "53": {
-    logo: "https://i.imgur.com/jldR4Sk.png",
+    logo: "/midwest/05_gonzaga.png",
     name: "Gonzaga Bulldogs",
   },
   "54": {
-    logo: "https://i.imgur.com/MlcgTsh.png",
+    logo: "/midwest/06_mcneese.png",
     name: "Mcneese State Cowboys",
   },
   "55": {
-    logo: "https://i.imgur.com/RRsEmaz.png",
+    logo: "/midwest/07_kansas.png",
     name: "Kansas Jayhawks",
   },
   "56": {
-    logo: "https://i.imgur.com/Bt65YWh.png",
+    logo: "/midwest/08_samford.png",
     name: "Samford Bulldogs",
   },
   "57": {
-    logo: "https://i.imgur.com/QWWnLvb.png",
+    logo: "/midwest/09_south-carolina.png",
     name: "South Carolina Gamecocks",
   },
   "58": {
-    logo: "https://i.imgur.com/TbrHh2c.png",
+    logo: "/midwest/10_oregon.png",
     name: "Oregon Ducks",
   },
   "59": {
-    logo: "https://i.imgur.com/LXSh4Rk.png",
+    logo: "/midwest/11_creighton.png",
     name: "Creighton Bluejays",
   },
   "60": {
-    logo: "https://i.imgur.com/2Xnm7rD.png",
+    logo: "/midwest/12_akron.png",
     name: "Akron Zips",
   },
   "61": {
-    logo: "https://i.imgur.com/OdnJotY.png",
+    logo: "/midwest/13_texas.png",
     name: "Texas Longhorns",
   },
   "62": {
-    logo: "https://i.imgur.com/1WFSzTL.png",
+    logo: "/midwest/14_midwest_colorado-st_virginia.png",
     name: "Colorodo St/Virginia",
   },
   "63": {
-    logo: "https://i.imgur.com/WnahBAT.png",
+    logo: "/midwest/15_tennessee.png",
     name: "Tennessee Volunteers",
   },
   "64": {
-    logo: "https://i.imgur.com/xeQhx9l.png",
+    logo: "/midwest/16_st-peters.png",
     name: "Saint Peter's Peacocks",
   },
 };
