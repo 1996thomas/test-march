@@ -636,7 +636,8 @@ app.frame("/summary", (c) => {
           justifyContent: "flex-start",
           paddingTop: "1rem",
           paddingLeft: "3rem",
-          backgroundColor: "black",
+          height: '100%',
+          backgroundColor: "black"
         }}
       >
         <p
