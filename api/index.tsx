@@ -878,7 +878,7 @@ app.frame("/finish", async (c) => {
             alt=""
             style={{ marginRight: ".2rem", marginLeft: "1rem" }}
           />
-          400{" "}
+          800{" "}
         </p>
         <p
           style={{
@@ -896,7 +896,7 @@ app.frame("/finish", async (c) => {
             alt=""
             style={{ marginRight: ".2rem", marginLeft: "1rem" }}
           />
-          200
+          400
         </p>
         <p
           style={{
@@ -914,13 +914,33 @@ app.frame("/finish", async (c) => {
             alt=""
             style={{ marginRight: ".2rem", marginLeft: "1rem" }}
           />
-          100
+          200
         </p>
 
-        <p style={{ color: white, fontSize: "1.8rem", textAlign: "center" }}>
-          4th to 10th place - USDC $8.99 (to mint a Beam Name)
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center"
+          }}
+        >
+          4th to 10th place - USDC 
+          <img
+            src="/usdc.png"
+            width={36}
+            height={36}
+            alt=""
+            style={{ marginRight: ".2rem", marginLeft: "1rem" }}
+          />
+          8.99 (to mint a Beam Name)
         </p>
-        <p style={{ color: white, fontSize: "1.8rem", textAlign: "center" }}>
+        <p
+          style={{
+            color: white,
+            fontSize: "1.8rem",
+            textAlign: "center"
+          }}
+        >
           All other participants - 10 Warps
         </p>
       </div>
@@ -1613,3 +1633,4 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
 
 export const GET = handle(app);
 export const POST = handle(app);
+
