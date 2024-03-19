@@ -691,7 +691,7 @@ app.frame("/finish", async (c) => {
       const response = await axios.get(
         `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
         {
-          headers: { Authorization: `Bearer 123` },
+          headers: { Authorization: `Bearer ${bearerToken}` },
         }
       );
       userData = response.data;
