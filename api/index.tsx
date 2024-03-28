@@ -311,7 +311,7 @@ function initializeTournamentState(): State {
 export const app = new Frog<{ State: State }>({
   assetsPath: "/",
   basePath: "/api",
-  browserLocation: "/",
+  browserLocation: "https://framemadness.vercel.app",
   hub: pinata(),
   initialState: initializeTournamentState(),
 });
