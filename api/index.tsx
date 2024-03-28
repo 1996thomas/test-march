@@ -1,10 +1,6 @@
 import { Button, Frog } from "frog";
 import { pinata } from "frog/hubs";
 import { handle } from "frog/vercel";
-import dotenv from "dotenv";
-import axios from "axios";
-dotenv.config();
-const bearerToken = process.env.BEARER_TOKEN;
 const teamsData = {
   "1": {
     logo: "/east/01_uconn.png",
@@ -367,12 +363,15 @@ app.frame("/", async (c) => {
             fontSize: "2rem",
           }}
         >
-          Follow /marchmadness to be eligible to win the prize.
+          March madness has started, submission are closed
         </p>
       </div>
     ),
     intents: [
       <Button action="/tournament">Enter the contest</Button>,
+      <Button.Link href="https://framemadness.vercel.app">
+        Leaderboard
+      </Button.Link>,
       <Button.Link href="https://warpcast.com/~/channel/framemadness">
         Follow us
       </Button.Link>,
@@ -636,10 +635,20 @@ app.frame("/summary", (c) => {
           justifyContent: "flex-start",
           paddingTop: "1rem",
           paddingLeft: "3rem",
-          height: '100%',
-          backgroundColor: "black"
+          height: "100%",
+          backgroundColor: "black",
         }}
       >
+        <img
+          src="/background.png"
+          width={1200}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          alt=""
+        />
         <p
           style={{
             color: primaryColor,
@@ -679,154 +688,7 @@ app.frame("/summary", (c) => {
   });
 });
 
-// Votre code précédent reste le même jusqu'à cette partie
-
 app.frame("/finish", async (c) => {
-  const ucs = c.previousState.ucs;
-  const fid = c.frameData?.fid;
-  let userData = [];
-
-  if (fid) {
-    try {
-      const response = await axios.get(
-        `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
-        {
-          headers: { Authorization: `Bearer ${bearerToken}` },
-        }
-      );
-      userData = response.data;
-    } catch (error) {
-      return c.res({
-        image: (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              position: "relative",
-              width: "100%",
-              height: "100%",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "2rem",
-            }}
-          >
-            <img
-              src="/background.png"
-              width={1200}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-              }}
-              alt=""
-            />
-            <p
-              style={{
-                color: primaryColor,
-                textAlign: "center",
-                fontSize: "4rem",
-              }}
-            >
-              Dang!! 😌
-            </p>
-
-            <p
-              style={{
-                color: white,
-                textAlign: "center",
-                fontSize: "2.3rem",
-              }}
-            >
-              Everyone loves us so much that they broke the frame. There are too
-              many players online at the same time; please try again later.
-            </p>
-          </div>
-        ),
-        intents: [<Button action="/finish">Retry</Button>],
-      });
-    }
-  }
-  if (ucs && userData) {
-    const userInformation = {
-      username: userData.data.username,
-      display_name: userData.data.display_name,
-      fid: userData.data.fid,
-      avatar: userData.data.pfp_url,
-      custody_address: userData.data.custody_address,
-      recovery_address: userData.data.custody_address,
-    };
-
-    try {
-      const postResponse = await axios.post(
-        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-        {
-          pinataContent: {
-            userInformation,
-            ucs,
-          },
-          pinataMetadata: {
-            name: `${userInformation.username}'s choices`,
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      return c.res({
-        image: (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              position: "relative",
-              width: "100%",
-              height: "100%",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "2rem",
-            }}
-          >
-            <img
-              src="/background.png"
-              width={1200}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-              }}
-              alt=""
-            />
-            <p
-              style={{
-                color: primaryColor,
-                textAlign: "center",
-                fontSize: "4rem",
-              }}
-            >
-              Dang!! 😌
-            </p>
-
-            <p
-              style={{
-                color: white,
-                textAlign: "center",
-                fontSize: "2.3rem",
-              }}
-            >
-              Everyone loves us so much that they broke the frame. There are too
-              many players online at the same time; please try again later.
-            </p>
-          </div>
-        ),
-        intents: [<Button action="/finish">Retry</Button>],
-      });
-    }
-  }
-
   return c.res({
     image: (
       <div
@@ -852,14 +714,15 @@ app.frame("/finish", async (c) => {
         <p style={{ fontSize: "4rem", color: primaryColor }}>
           Congratulations! 🎉
         </p>
+
         <p
           style={{
-            color: white,
-            fontSize: "1.8rem",
-            textAlign: "center",
+            alignText: "center",
+            color: regionColor.midwest,
+            fontSize: "2rem",
           }}
         >
-          Your bracket was submitted, and the prizes are:
+          March madness has started, submission are closed
         </p>
 
         <p
@@ -921,10 +784,10 @@ app.frame("/finish", async (c) => {
           style={{
             color: white,
             fontSize: "1.8rem",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
-          4th to 10th place - USDC 
+          4th to 10th place - USDC
           <img
             src="/usdc.png"
             width={36}
@@ -938,7 +801,7 @@ app.frame("/finish", async (c) => {
           style={{
             color: white,
             fontSize: "1.8rem",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           All other participants - 10 Warps
@@ -1008,6 +871,9 @@ app.frame("/continue", (c) => {
       </div>
     ),
     intents: [
+      <Button.Link href="https://framemadness.vercel.app">
+        Leaderboard
+      </Button.Link>,
       <Button.Link href="https://warpcast.com/~/channel/framemadness">
         Follow us
       </Button.Link>,
@@ -1633,4 +1499,3 @@ function roundTest(matchNum: number, i?: string): JSX.Element | string {
 
 export const GET = handle(app);
 export const POST = handle(app);
-
